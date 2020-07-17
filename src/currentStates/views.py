@@ -90,4 +90,4 @@ class CurrentStateView(View):
                 "heating": states[1],
                 "boiler": states[2]
         }
-        return loader.render_to_string("currentStates.html", context, request)
+        return loader.render_to_string("homepage/currentStates.html", context, request)

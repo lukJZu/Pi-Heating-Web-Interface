@@ -1,0 +1,72 @@
+{% if not state %}
+
+
+<div class="col-md-6 col-sm-12 col-xxl-3 col-lg-4 mb-3">
+    <div class = 'card' >
+        <div class='card-body'>
+            <div class="input-group mb-3">
+                <form method = 'POST' action='.'> {% csrf_token %}
+                    <div class = 'input-group-prepend'>
+                        <label class="input-group-integer" for="boostMinutes"><h4>Boost Hot Water</h4></label>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-12 range_slider" id='range_slider'>
+                            <input class="custom-range" type="range" id="boostMinutes" name="boostMinutes"
+                                min="20" max="100" value="20">
+                            <h3><span class="badge badge-secondary"><output class="bubble" id="range_bubble"></output> mins</span></h3>
+                        </div>
+                    </div>
+                        <div class="input-group-append mt-3">
+                            <button class="btn-primary btn-lg" type="submit">Boost</button>
+                        </div>
+                </form>
+                
+                <script>
+                    const allRanges = document.querySelectorAll("#range_slider");
+                        allRanges.forEach(wrap => {
+                        const range = wrap.querySelector("#boostMinutes");
+                        const bubble = wrap.querySelector("#range_bubble");
+
+                        range.addEventListener("input", () => {
+                            setBubble(range, bubble);
+                        });
+                        setBubble(range, bubble);
+                        });
+
+                        function setBubble(range, bubble) {
+                        const val = range.value;
+                        const min = range.min ? range.min : 0;
+                        const max = range.max ? range.max : 100;
+                        const newVal = Number(((val - min) * 100) / (max - min));
+                        bubble.innerHTML = val;
+
+                        // Sorta magic numbers based on size of the native UI thumb
+                        //bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
+                    }
+                </script>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+{% load tz %}
+<div class="col-md-6 col-sm-12 col-xl-3 col-lg-4 mb-3">
+    <div class = 'card'>
+        <div class='card-body'>
+            <div class="col-12">
+                <h3>
+                    Hot Water Boosting till {{endTime|localtime|date:"H:i"}} ({{timeLeft|stringformat:"d"}}min left)
+                </h3>
+                <button type="submit" class="btn btn-danger btn-lg mt-3" onclick="location.href=/stop_boost/">
+                    Stop Boost
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endif %}

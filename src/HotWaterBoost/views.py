@@ -43,7 +43,7 @@ class BoostView(View):
         else:
             context = None
 
-        return loader.render_to_string("hotWaterBoost.html", context, request)
+        return loader.render_to_string("homepage/hotWaterBoost.html", context, request)
 
     def post(self, request):
         form = boostHotWaterForm(request.POST or None)

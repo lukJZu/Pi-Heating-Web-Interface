@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content%}
+<div class = 'row'>
+    <div class="col-12 mb-4 mx-auto">
+        <h1>Hello, 
+        {% if user.is_authenticated%}
+            {{user}}
+        {% endif %}
+        </h1>
+        <h3>Welcome to the Dashboard</h3>
+    </div>
+</div>
+
+<div class='row justify-content-center'>
+    {{ currentStatesRendered }}
+
+    {{ boostRendered }}
+
+    {%include "homepage/hotWaterSchedule.html"%}
+    
+
+    {%include "homepage/boilerHistoryCard.html"%}
+
+</div>
+{% endblock %}

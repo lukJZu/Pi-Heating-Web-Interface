@@ -47,7 +47,7 @@ class HomePage(View):
                     "hotWaterSchedule": schedule, 
                     "boilerStates": reversed(states), "boostRendered":boostRendered}
 
-        return render(request, "homepage.html", context)
+        return render(request, "homepage/homepage.html", context)
 
     def post(self, request):
         self.boostView.post(request)

@@ -24,8 +24,7 @@ from currentStates.views import toggleStates
 urlpatterns = [
     path('', HomePage.as_view()),
     path('stop_boost/', stop_boost),
-    path('toggle_<str:device>/', toggleStates),
+    path('toggle/<str:device>/', toggleStates),
     path('history/', HistoryPage.as_view()), 
-    # path('boiler-history/', HistoryPage.as_view()),
     path('admin/', admin.site.urls),
 ]
