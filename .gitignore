@@ -1,6 +1,6 @@
 # created by virtualenv automatically
-
-
+**/*.sqlite3
+.vscode/*
 lib/*
 bin/*
 *.cfg
