@@ -8,3 +8,4 @@ else:
     homePath = "/home/pi"
 
 stateJsonPath = os.path.join(homePath, 'data', 'states.json')
+agileRatesPath = os.path.join(homePath, 'data', 'agileRates.csv')

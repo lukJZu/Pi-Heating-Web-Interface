@@ -3,8 +3,9 @@ from django.shortcuts import render
 from django.views import View
 from django.conf import settings
 from django.utils import timezone
-import pytz
+import pytz, json
 
+from home.constants import stateJsonPath
 from boilerHistory.models import BoilerState
 from home.views import condenseTimes
 
@@ -27,9 +28,9 @@ class HistoryPage(View):
             earliestDate = allStates.earliest("start_time").start_time.astimezone(
                                 pytz.timezone(settings.TIME_ZONE)).date()
             #include today
-            totalDays = (today - earliestDate).days
+            totalDays = (today - earliestDate).days + 1
             #getting the daily use since start
-            dailyUse = self.getDailyUse(allStates, earliestDate, totalDays+1)
+            dailyUse = self.getDailyUse(allStates, earliestDate, totalDays)
 
             pastUse = dailyUse[-7:]
             context['week'] = sum(pastUse) / len(pastUse)
@@ -39,6 +40,13 @@ class HistoryPage(View):
 
             context['allTime'] = sum(dailyUse) / len(dailyUse)
             
+            #saving the past month average to states.json
+            with open(stateJsonPath, 'r') as f:
+                states = json.load(f)
+            with open(stateJsonPath, 'w') as f:
+                states['hotWater']['pastMonthAvg'] = context['month']
+                json.dump(states, f)
+
             states = []
             for state in allStates:
                 duration = (state.end_time - state.start_time).seconds / 60
@@ -54,10 +62,11 @@ class HistoryPage(View):
         # startDate = weekAgo
         for addDate in range(days):
             queryDate = startDate + timedelta(days = addDate)
-            # print(queryDate)
             dayQS = rangeQS.filter(start_time__date=queryDate.strftime("%Y-%m-%d"))
             if not dayQS.exists():
-                dailyUse.append(0)
+                #only add if the query day is not today
+                if addDate != days - 1:
+                    dailyUse.append(0)
                 continue
             else:
                 seconds = 0

@@ -15,6 +15,7 @@ from home.constants import homePath
 
 from HotWaterBoost.views import BoostView
 from currentStates.views import CurrentStateView
+from agileRates.views import agileRatesView
 
 # @method_decorator(staff_member_required, name = 'get')
 class HomePage(View):
@@ -23,6 +24,7 @@ class HomePage(View):
     def get(self, request):
         boostRendered = self.boostView.get(request)
         currentStatesRendered = CurrentStateView().get(request)
+        agileRatesRendered = agileRatesView().get(request, count = 3)
         #checking for new states to be updated into the DB
         updateHistoryDB()
         #get the history model
@@ -45,7 +47,8 @@ class HomePage(View):
         title = "Pi-Heating Dashboard"
         context = {"title":title, "currentStatesRendered":currentStatesRendered, 
                     "hotWaterSchedule": schedule, 
-                    "boilerStates": reversed(states), "boostRendered":boostRendered}
+                    "boilerStates": reversed(states), "boostRendered":boostRendered,
+                    "agileRatesRendered": agileRatesRendered}
 
         return render(request, "homepage/homepage.html", context)
 

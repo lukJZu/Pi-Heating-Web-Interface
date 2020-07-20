@@ -20,11 +20,13 @@ from home.views import HomePage
 from HotWaterBoost.views import stop_boost
 from boilerHistory.views import HistoryPage
 from currentStates.views import toggleStates
+from agileRates.views import agileRatesView
 
 urlpatterns = [
     path('', HomePage.as_view()),
     path('stop_boost/', stop_boost),
     path('toggle/<str:device>/', toggleStates),
     path('history/', HistoryPage.as_view()), 
+    path('agile_rates/', agileRatesView.as_view()), 
     path('admin/', admin.site.urls),
 ]

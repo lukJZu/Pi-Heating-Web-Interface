@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load tz %}
+{%block content%}
+
+<div class="row">
+    <div class="col-12 mb-3">
+        <h4>Agile Rates</h4>
+    </div>
+</div>
+{% now "d H:i" as current_time %}
+<div class="row justify-content-center">
+    <div class="col-md-4 col-sm-12 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Current Rate</h5>
+                    <h3 class="font-weight-bold mb-3">
+                        {{current.2}}p
+                    </h3>
+                    <br>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-12 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Today's Lowest</h5>
+                    <h3 class="font-weight-bold mb-3">{{todayMin.rate}}p</h3>
+                        <h5>at {% for time in todayMin.times%}{{time|localtime|date:"H:i "}}{%endfor%}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-12 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Tomorrow's Lowest</h5>
+                    {%if tmrMin.rate%}
+                    <h3 class="font-weight-bold mb-3">{{tmrMin.rate}}p</h3>
+                        <p>at {% for time in tmrMin.times%}{{time|localtime|date:"H:i "}}{%endfor%}</p>
+                    {%endif%}
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                    <table class="table table-striped" style="width:100%">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Rate</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for rate in rates%}
+                        {% if rate.2 == todayMin.rate %}
+                            <tr class="table-info">
+                        {% elif rate.2 == tmrMin.rate %}
+                            <tr class="table-primary">
+                        {% elif rate.2 < 0 %}
+                            <tr class="table-success">
+                        {% elif rate.2 > 15 %}
+                            <tr class="table-danger">
+                        {% elif rate.0|localtime|date:"d H:i" <= current_time and current_time < rate.1|localtime|date:"d H:i" %}
+                            <tr class="table-light">
+                        {% elif rate.0|localtime|date:"d H:i" < current_time %}
+                            <tr class="table-secondary">
+                        {% else %}
+                            <tr>
+                    {% endif %}
+                    {% if rate.0|localtime|date:"d H:i" <= current_time and current_time < rate.1|localtime|date:"d H:i" %}
+                        {% comment %} <td><h3>{%now "H:i"%}</h3></td> {% endcomment %}
+                        <td><h5 class="font-weight-bold">{{rate.0|localtime|date:"d M H:i"}}</h5></td>
+                        <td><h5 class="font-weight-bold">{{rate.1|localtime|date:"d M H:i"}}</h5></td>
+                        <td><h5 class="font-weight-bold">{{rate.2|stringformat:".3f"}}p</h5></td>
+                    {% else %}
+                        <td>{{rate.0|localtime|date:"d M H:i"}}</td>
+                        <td>{{rate.1|localtime|date:"d M H:i"}}</td>
+                        <td>{{rate.2|stringformat:".3f"}}p</td>
+                    {% endif %}
+                    </tr>
+                    {%endfor %}
+                    <tbody>
+                    </table> 
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</div>
+
+
+{% endblock %}
