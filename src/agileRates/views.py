@@ -56,8 +56,10 @@ class agileRatesView(View):
                 elif rate[0].astimezone(get_localzone()).date() == timeNow.date() + timedelta(days=1):
                     tmrMin = min(tmrMin, rate[2])
 
-            todayMinTimes = [rate[0] for rate in dispRates if rate[2] == todayMin and rate[0].date() == timeNow.date()] 
-            tmrMinTimes = [rate[0] for rate in dispRates if rate[2] == tmrMin and rate[0].date() == timeNow.date() + timedelta(days=1)] 
+            todayMinTimes = [rate[0] for rate in dispRates if rate[2] == todayMin \
+                                and rate[0].astimezone(get_localzone()).date() == timeNow.date()] 
+            tmrMinTimes = [rate[0] for rate in dispRates if rate[2] == tmrMin and \
+                            rate[0].astimezone(get_localzone()).date() == timeNow.date() + timedelta(days=1)] 
 
             context["current"] = currentRate
             context["todayMin"] = {"rate":todayMin, "times":todayMinTimes}
