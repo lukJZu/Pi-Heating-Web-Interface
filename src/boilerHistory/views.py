@@ -31,6 +31,9 @@ class HistoryPage(View):
             totalDays = (today - earliestDate).days + 1
             #getting the daily use since start
             dailyUse = self.getDailyUse(allStates, earliestDate, totalDays)
+            hot_water_daily_use = self.getDailyUse(allStates, 
+                                                    date.today() - timedelta(days = 30),
+                                                    30, hot_water_only=True)
 
             pastUse = dailyUse[-7:]
             context['week'] = sum(pastUse) / len(pastUse)
@@ -44,7 +47,8 @@ class HistoryPage(View):
             with open(stateJsonPath, 'r') as f:
                 states = json.load(f)
             with open(stateJsonPath, 'w') as f:
-                states['hotWater']['pastMonthAvg'] = context['month']
+                hot_water_past_month = sum(hot_water_daily_use) / len(hot_water_daily_use)
+                states['hotWater']['pastMonthAvg'] = hot_water_past_month
                 json.dump(states, f)
 
             states = []
@@ -57,7 +61,7 @@ class HistoryPage(View):
         return render(request, "boilerHistory.html", context)
 
 
-    def getDailyUse(self, rangeQS, startDate, days):
+    def getDailyUse(self, rangeQS, startDate, days, hot_water_only=False):
         dailyUse = []
         # startDate = weekAgo
         for addDate in range(days):
@@ -71,7 +75,12 @@ class HistoryPage(View):
             else:
                 seconds = 0
                 for state in dayQS:
-                    seconds += (state.end_time - state.start_time).seconds
+                    if hot_water_only:
+                        if state.hot_water_state:
+                            seconds += (state.end_time - state.start_time).seconds
+                    else:
+                        seconds += (state.end_time - state.start_time).seconds
+
                 dailyUse.append(seconds/60)
 
         return dailyUse

@@ -8,6 +8,8 @@
     </div>
 </div>
 {% now "d H:i" as current_time %}
+{% now "H:i" as time_now %}
+{% now "d" as today %}
 <div class="row justify-content-center">
     <div class="col-md-4 col-sm-12 mb-3">
         <div class="card">
@@ -56,9 +58,9 @@
                     </thead>
                     <tbody>
                     {% for rate in rates%}
-                        {% if rate.2 == todayMin.rate %}
+                        {% if rate.2 == todayMin.rate and rate.0|localtime|date:"d" == today %}
                             <tr class="table-info">
-                        {% elif rate.2 == tmrMin.rate %}
+                        {% elif rate.2 == tmrMin.rate and rate.0|localtime|date:"d" != today %}<!---->
                             <tr class="table-primary">
                         {% elif rate.2 < 0 %}
                             <tr class="table-success">
@@ -66,7 +68,7 @@
                             <tr class="table-danger">
                         {% elif rate.0|localtime|date:"d H:i" <= current_time and current_time < rate.1|localtime|date:"d H:i" %}
                             <tr class="table-light">
-                        {% elif rate.0|localtime|date:"d H:i" < current_time %}
+                        {% elif rate.0|localtime|date:"H:i" < time_now and rate.0|localtime|date:"d" == today %}
                             <tr class="table-secondary">
                         {% else %}
                             <tr>

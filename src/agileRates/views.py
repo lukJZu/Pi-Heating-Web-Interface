@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from django.shortcuts import render
 from django.template import loader
 from django.views import View
+from tzlocal import get_localzone
 
 from home.constants import agileRatesPath
 
@@ -44,19 +45,19 @@ class agileRatesView(View):
                     continue
                 dispRates.append((startTime, datetime.fromisoformat(rate[1]), float(rate[2])))
             
-            context = {"rates":dispRates}
+            context = {"rates": dispRates}
 
             #finding lowest rate for today
             todayMin = 9999
             tmrMin = 9999
             for rate in dispRates:
-                if rate[0].date() == timeNow.date():
+                if rate[0].astimezone(get_localzone()).date() == timeNow.date():
                     todayMin = min(todayMin, rate[2])
-                elif rate[0].date() == timeNow.date() + timedelta(days=1):
+                elif rate[0].astimezone(get_localzone()).date() == timeNow.date() + timedelta(days=1):
                     tmrMin = min(tmrMin, rate[2])
 
-            todayMinTimes = [rate[0] for rate in dispRates if rate[2] == todayMin] 
-            tmrMinTimes = [rate[0] for rate in dispRates if rate[2] == tmrMin] 
+            todayMinTimes = [rate[0] for rate in dispRates if rate[2] == todayMin and rate[0].date() == timeNow.date()] 
+            tmrMinTimes = [rate[0] for rate in dispRates if rate[2] == tmrMin and rate[0].date() == timeNow.date() + timedelta(days=1)] 
 
             context["current"] = currentRate
             context["todayMin"] = {"rate":todayMin, "times":todayMinTimes}

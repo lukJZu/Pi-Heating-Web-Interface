@@ -1,4 +1,5 @@
 {% load tz %}
+{% now "d H:i" as current_time %}
 <div class="col-md-6 col-sm-12 col-xxl-3 col-lg-4 mb-3">
     <div class="card">
         <div class="card-body">
@@ -14,7 +15,11 @@
                 </thead>
                 <tbody>
                 {% for a in hotWaterSchedule%}
-                <tr>
+                {% if a.0|localtime|date:"d H:i" <= current_time and current_time < a.1|localtime|date:"d H:i" %}
+                    <tr class="table-danger">
+                {% else %}
+                    <tr>
+                {% endif %}
                     {% with time=a.0|localtime %}
                     <td>{{time|date:"Y-m-d H:i"}}</td>
                     {% endwith %}
