@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'boilerHistory',
     'HotWaterBoost',
     "currentStates",
-    "agileRates"
+    "agileRates",
+    "googleNest"
 ]
 
 MIDDLEWARE = [

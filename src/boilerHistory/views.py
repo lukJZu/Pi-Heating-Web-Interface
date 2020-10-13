@@ -4,6 +4,7 @@ from django.views import View
 from django.conf import settings
 from django.utils import timezone
 import pytz, json
+import sys
 
 from home.constants import stateJsonPath
 from boilerHistory.models import BoilerState
@@ -55,7 +56,7 @@ class HistoryPage(View):
             for state in allStates:
                 duration = (state.end_time - state.start_time).seconds / 60
                 states.append((state, duration))
-            context['states'] = states
+            context['states'] = list(reversed(states))
 
         context['title'] = "Boiler Usage History"
         return render(request, "boilerHistory.html", context)
@@ -76,6 +77,7 @@ class HistoryPage(View):
                 seconds = 0
                 for state in dayQS:
                     if hot_water_only:
+                        # print(queryDate)
                         if state.hot_water_state:
                             seconds += (state.end_time - state.start_time).seconds
                     else:

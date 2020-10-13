@@ -21,12 +21,14 @@ from HotWaterBoost.views import stop_boost
 from boilerHistory.views import HistoryPage
 from currentStates.views import toggleStates
 from agileRates.views import agileRatesView
+from googleNest.views import GoogleNestPage#get_nest_view
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('', HomePage.as_view()),
     path('stop_boost/', stop_boost),
     path('toggle/<str:device>/', toggleStates),
     path('history/', HistoryPage.as_view()), 
     path('agile_rates/', agileRatesView.as_view()), 
-    path('admin/', admin.site.urls),
+    path('google_nest/', GoogleNestPage.as_view()),
 ]

@@ -10,7 +10,7 @@ class BoilerState(models.Model):
     heating_state = models.BooleanField()
 
     class meta:
-        ordering = ['start_time']
+        ordering = ['-start_time']
 
     @classmethod
     def create(cls):
