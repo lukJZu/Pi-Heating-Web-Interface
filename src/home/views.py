@@ -65,7 +65,7 @@ def move_build_static():
 
     main_js_file = None
     r = re.compile('^main.*')
-    build_js_path = os.path.join(settings.BASE_DIR, './frontend/build/static/js')
+    build_js_path = os.path.join(settings.BASE_DIR, 'frontend/build/static/js')
     build_js_dir = os.listdir(build_js_path)
     build_js_file = list(filter(r.match, build_js_dir))
     static_js_path = os.path.join(settings.STATICFILES_DIRS[0], 'js')
@@ -82,10 +82,7 @@ def move_build_static():
                             os.path.join(static_js_path, file_name))
     else:
         main_js_file = static_js_file[0]
-    # r = re.compile('^main.*')
-    # main_files = list(filter(r.match, js_files))
-
-    # main_js_file = list(filter(re.compile('.*js').match, main_files))[0]
+        
     return main_js_file
 
 
