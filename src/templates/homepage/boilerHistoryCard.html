@@ -7,7 +7,7 @@
                 Boiler Usage History
                 {% comment %} </a> {% endcomment %}
                 </h4>
-                {% include  "historyTable.html"%} 
+                {% include  "historyTable.html" with limit=5 %} 
             
             <a class="btn btn-primary btn-md float-right" href="/history/">View All</a>
         </div>

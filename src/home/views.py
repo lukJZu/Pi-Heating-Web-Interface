@@ -1,8 +1,9 @@
-import os, csv, subprocess, sys
+import os, csv, sys, re
 import iso8601
 from dateutil.tz import tzlocal 
 
 import django.http
+from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.apps import apps
@@ -44,11 +45,22 @@ class HomePage(View):
             next(lines, None)
             schedule = condenseTimes(list(lines))
 
+        main_js_file = None
+        if settings.DEBUG:
+            js_files = os.listdir(os.path.join(
+                        settings.STATICFILES_DIRS[1], 'js'))
+            r = re.compile('^main.*')
+            main_files = list(filter(r.match, js_files))
+
+            main_js_file = list(filter(re.compile('.*js').match, main_files))[0]
+
+
         title = "Pi-Heating Dashboard"
         context = {"title":title, "currentStatesRendered":currentStatesRendered, 
                     "hotWaterSchedule": schedule, 
                     "boilerStates": reversed(states), "boostRendered":boostRendered,
-                    "agileRatesRendered": agileRatesRendered}
+                    "agileRatesRendered": agileRatesRendered,
+                    "js_file":main_js_file}
 
         return render(request, "homepage/homepage.html", context)
 

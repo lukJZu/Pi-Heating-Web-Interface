@@ -1,7 +1,8 @@
 {
-  "name": "pi-heating-web",
+  "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "127.0.0.1:8000/api",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -13,7 +14,11 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "watch": "npm-watch"
+  },
+  "watch": {
+    "build": "src/"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -29,5 +34,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "npm-watch": "^0.7.0"
   }
 }

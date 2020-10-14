@@ -1,26 +1,18 @@
-# # created by virtualenv automatically
-**/*.sqlite3
-.vscode/*
-lib/*
-bin/*
-*.cfg
-
-**/*.pyc
-
-#react.js files
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-**/node_modules
-**/.pnp
-**/.pnp.js
+/node_modules
+/.pnp
+.pnp.js
 
 # testing
 /coverage
 
 # production
-**/public
-!**/build/static/js/*
+/build/*.*
+/build/static/css/*
+/build/static/media/
+!/build/static/js/*
 
 # misc
 .DS_Store

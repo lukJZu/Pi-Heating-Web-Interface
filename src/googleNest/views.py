@@ -2,12 +2,13 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.views import View
 from django.http import HttpResponse, Http404, JsonResponse
+import logging, sys, traceback
 
 import json, requests
 from home.constants import homePath, stateJsonPath
 from .token_request import get_access_token
 
-
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 class GoogleNestPage(View):
@@ -37,5 +38,9 @@ class GoogleNestPage(View):
         except ConnectionRefusedError:
             json_resp = {'message': 'GOOGLE API ERROR'}
             status = 401
+        except:
+            error = sys.exc_info()
+            json_resp = {'message': f'{error[0]}', 'details':traceback.extract_tb(error[2]).format() }
+            status = 400
 
         return JsonResponse(json_resp, status=status)

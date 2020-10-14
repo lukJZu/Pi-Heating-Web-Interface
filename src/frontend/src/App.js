@@ -2,7 +2,11 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import {BoilerStateList} from './boilerStates'
+
+
 function App() {
+
   return (
     <div className="App">
       <header className="App-header">
@@ -18,6 +22,10 @@ function App() {
         >
           Learn React
         </a>
+        <div>
+          <BoilerStateList />
+        </div>
+
       </header>
     </div>
   );

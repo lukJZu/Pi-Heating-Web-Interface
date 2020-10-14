@@ -2,7 +2,7 @@
     <div class="card" style="min-width=600px">
         <div class="card-body">
             <h4 class="card-title mb-3">
-                Nest Thermostat Status
+                Nest Thermostat
             </h4>
             <div id="card-content">
                 <div class="text-center">
@@ -28,8 +28,16 @@
     xhr.onload = function() {
         const contentEl = document.getElementById("card-content")
         const serverResponse = xhr.response
-        console.log(serverResponse)
-        contentEl.innerHTML = serverResponse.traits["sdm.devices.traits.ThermostatTemperatureSetpoint"]["heatCelsius"]
+        if (this.status === 200){
+            thermostatSetTemp = serverResponse.traits["sdm.devices.traits.ThermostatTemperatureSetpoint"]["heatCelsius"]
+            ambientTemp = serverResponse.traits["sdm.devices.traits.Temperature"]["ambientTemperatureCelsius"]
+            contentEl.innerHTML = "<h5>Ambient Temp: "+ ambientTemp.toFixed(1) +"</h5>"
+            contentEl.innerHTML += "<h5>Thermostat Set Temp: "+ thermostatSetTemp.toFixed(1)  +"</h5>"
+        }
+        else{
+            contentEl.innerHTML = "ERROR: " + serverResponse.message
+        }
+
     }
     xhr.send()
 

@@ -1,19 +1,38 @@
+import pytz, json
+import sys, os, re
 from datetime import datetime, time, timedelta, date
+
 from django.shortcuts import render
+from django.http import JsonResponse
 from django.views import View
 from django.conf import settings
 from django.utils import timezone
-import pytz, json
-import sys
 
+from .serializers import BoilerStateSerializer
+from rest_framework import generics, response
+from rest_framework.decorators import api_view
+ 
 from home.constants import stateJsonPath
-from boilerHistory.models import BoilerState
+from .models import BoilerState
 from home.views import condenseTimes
+
+class BoilerStateListCreate(generics.ListCreateAPIView):
+    queryset = BoilerState.objects.all().order_by("-start_time")
+    serializer_class = BoilerStateSerializer
+    
+    def list(self, request, *args, **kwargs):
+        limit = self.kwargs['limit']
+        if limit:
+            queryset = self.get_queryset()[:limit]
+        else:
+            queryset = self.get_queryset()
+        serializer = BoilerStateSerializer(queryset, many=True)
+        return response.Response(serializer.data)
 
 # Create your views here.
 class HistoryPage(View):
 
-    def get(self, request):
+    def get(self, request):   
         today = date.today()
 
         context = {}
@@ -59,6 +78,17 @@ class HistoryPage(View):
             context['states'] = list(reversed(states))
 
         context['title'] = "Boiler Usage History"
+
+        main_js_file = None
+        if settings.DEBUG:
+            js_files = os.listdir(os.path.join(
+                        settings.STATICFILES_DIRS[1], 'js'))
+            r = re.compile('^main.*')
+            main_files = list(filter(r.match, js_files))
+
+            main_js_file = list(filter(re.compile('.*js').match, main_files))[0]
+        context['js_file'] = main_js_file
+
         return render(request, "boilerHistory.html", context)
 
 
