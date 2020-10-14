@@ -1,4 +1,4 @@
-import os, csv, sys, re
+import os, csv, sys, re, glob, shutil
 import iso8601
 from dateutil.tz import tzlocal 
 
@@ -45,16 +45,7 @@ class HomePage(View):
             next(lines, None)
             schedule = condenseTimes(list(lines))
 
-        main_js_file = None
-        if settings.DEBUG:
-            js_files = os.listdir(os.path.join(
-                        settings.STATICFILES_DIRS[1], 'js'))
-            r = re.compile('^main.*')
-            main_files = list(filter(r.match, js_files))
-
-            main_js_file = list(filter(re.compile('.*js').match, main_files))[0]
-
-
+        main_js_file = move_build_static()
         title = "Pi-Heating Dashboard"
         context = {"title":title, "currentStatesRendered":currentStatesRendered, 
                     "hotWaterSchedule": schedule, 
@@ -67,6 +58,36 @@ class HomePage(View):
     def post(self, request):
         self.boostView.post(request)
         return redirect('/')
+
+def move_build_static():
+    if not settings.DEBUG:
+        return None
+
+    main_js_file = None
+    r = re.compile('^main.*')
+    build_js_path = os.path.join(settings.BASE_DIR, './frontend/build/static/js')
+    build_js_dir = os.listdir(build_js_path)
+    build_js_file = list(filter(r.match, build_js_dir))
+    static_js_path = os.path.join(settings.STATICFILES_DIRS[0], 'js')
+    static_js_dir = os.listdir(static_js_path)
+    static_js_file = list(filter(r.match, static_js_dir))
+    
+    if build_js_file:
+        main_js_file = build_js_file[0]
+        if main_js_file not in static_js_file:
+            for file_name in static_js_dir:
+                os.remove(os.path.join(static_js_path, file_name))
+            for file_name in build_js_dir:
+                shutil.move(os.path.join(build_js_path, file_name), 
+                            os.path.join(static_js_path, file_name))
+    else:
+        main_js_file = static_js_file[0]
+    # r = re.compile('^main.*')
+    # main_files = list(filter(r.match, js_files))
+
+    # main_js_file = list(filter(re.compile('.*js').match, main_files))[0]
+    return main_js_file
+
 
 
 #function that checks for existing data in the csv file saved from the measureBoiler.py script

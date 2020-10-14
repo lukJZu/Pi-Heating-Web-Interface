@@ -136,8 +136,7 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES
 }
 
-# REACT_BUILD_JS_FILES = os.path.join(BASE_DIR, './frontend/build/static/js')
-
+REACT_BUILD_JS_FILES = os.path.join(BASE_DIR, './frontend/build/static/js')
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -160,6 +159,5 @@ STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static-root')
 MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '../static'),
-    os.path.join(BASE_DIR, './frontend/build/static'),
+    os.path.join(BASE_DIR, '../static')
     ]
