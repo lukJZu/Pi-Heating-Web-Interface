@@ -111,7 +111,7 @@ def updateHistoryDB():
             #only save the state if the duration is more than 3min
             if (state[1] - state[0]).seconds < 180:
                 continue
-
+            
             histObj = apps.get_model('boilerHistory', 'BoilerState').create()
             histObj.start_time = state[0]
             histObj.end_time = state[1]
@@ -120,22 +120,22 @@ def updateHistoryDB():
             histObj.save()
 
     # clear the existing csv file
-    with open(csvFile, 'w') as f:
-        #check if the last item in the csv is saying boiler is on
-        #then write that line back into the csv
-        values = ''
-        for no in range(len(lines)-1, -1, -1):
-            if not len(lines[no]):
-                continue
-            elif lines[no][-1] == 'True':
-                values = lines[no][0] + ","
-                values += ",".join(str(v) for v in lines[no][1:])
-                values += "\n"
-                break
-            else:
-                break
+    # with open(csvFile, 'w') as f:
+    #     #check if the last item in the csv is saying boiler is on
+    #     #then write that line back into the csv
+    #     values = ''
+    #     for no in range(len(lines)-1, -1, -1):
+    #         if not len(lines[no]):
+    #             continue
+    #         elif lines[no][-1] == 'True':
+    #             values = lines[no][0] + ","
+    #             values += ",".join(str(v) for v in lines[no][1:])
+    #             values += "\n"
+    #             break
+    #         else:
+    #             break
 
-        f.write(values)
+    #     f.write(values)
 
 
 

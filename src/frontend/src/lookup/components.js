@@ -5,14 +5,16 @@ export function getBoilerStates(callback, limit){
 
     const xhr = new XMLHttpRequest()
     const method = 'GET'
-    const url = `http://127.0.0.1:8000/api/boilerStates/${limit}`
+    const url = `http://192.168.1.42/api/boilerStates/${limit}`
     const responseType = "json"
   
     xhr.responseType = responseType
     xhr.open(method, url)
-    // xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    // xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+    xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest")
     // xhr.setRequestHeader("Access-Control-Allow-Origin", "*")
     // xhr.setRequestHeader("X-CSRFToken", csrftoken)
+
     xhr.onload = function() {
         callback(xhr.response, xhr.status)
     }

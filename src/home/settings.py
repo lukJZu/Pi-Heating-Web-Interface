@@ -26,7 +26,10 @@ SECRET_KEY = 'le0_xkk%us@ob+r$xxkula1m6)l_cq389zyllfq)g6y5t#^gd4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.42', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['192.168.1.42', 
+                 '127.0.0.1', 
+                'localhost'
+                ]
 
 
 # Application definition
@@ -115,13 +118,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # we whitelist localhost:3000 because that's where frontend will be served
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000',
-     'http://localhost:8000',
-     'http://127.0.0.1:3000',
-     'http://192.168.1.42',
+# CORS_ORIGIN_WHITELIST = [
+#      'http://localhost:3000',
+#      'http://localhost:8000',
+#      'http://127.0.0.1:3000',
+#      'http://192.168.1.42',
 
-]
+# ]
 
 DEFAULT_RENDERER_CLASSES = [
         'rest_framework.renderers.JSONRenderer',
