@@ -14,7 +14,7 @@ from rest_framework.decorators import api_view
  
 from home.constants import stateJsonPath
 from .models import BoilerState
-from home.views import condenseTimes
+from home.views import condenseTimes, move_build_static
 
 class BoilerStateListCreate(generics.ListCreateAPIView):
     queryset = BoilerState.objects.all().order_by("-start_time")
@@ -79,14 +79,7 @@ class HistoryPage(View):
 
         context['title'] = "Boiler Usage History"
 
-        main_js_file = None
-        if settings.DEBUG:
-            js_files = os.listdir(os.path.join(
-                        settings.STATICFILES_DIRS[1], 'js'))
-            r = re.compile('^main.*')
-            main_files = list(filter(r.match, js_files))
-
-            main_js_file = list(filter(re.compile('.*js').match, main_files))[0]
+        main_js_file = move_build_static()
         context['js_file'] = main_js_file
 
         return render(request, "boilerHistory.html", context)

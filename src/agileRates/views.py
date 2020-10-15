@@ -19,6 +19,7 @@ class agileRatesView(View):
         timeNow = datetime.now().astimezone()
         #iterate over the rows to determine the currentRate
         if count:
+            currentRate = None
             for no, rate in enumerate(rates):
                 if datetime.fromisoformat(rate[0]) <= timeNow < datetime.fromisoformat(rate[1]):
                     currentRate = (datetime.fromisoformat(rate[0]), datetime.fromisoformat(rate[1]), rate[2])
@@ -34,6 +35,7 @@ class agileRatesView(View):
             context = {"current": currentRate, "next": nextRates}
             return loader.render_to_string("homepage/agileRatesCard.html", context)
         else:
+            currentRate = None
             for no, rate in enumerate(rates):
                 if datetime.fromisoformat(rate[0]) <= timeNow < datetime.fromisoformat(rate[1]):
                     currentRate = (datetime.fromisoformat(rate[0]), datetime.fromisoformat(rate[1]), rate[2])

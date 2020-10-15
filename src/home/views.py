@@ -64,10 +64,14 @@ def move_build_static():
         return None
 
     main_js_file = None
-    r = re.compile('^main.*')
+    r = re.compile('^main.*js$')
     build_js_path = os.path.join(settings.BASE_DIR, 'frontend/build/static/js')
-    build_js_dir = os.listdir(build_js_path)
-    build_js_file = list(filter(r.match, build_js_dir))
+    try:
+        build_js_dir = os.listdir(build_js_path)
+    except FileNotFoundError:
+        build_js_file = None
+    else:
+        build_js_file = list(filter(r.match, build_js_dir))
     static_js_path = os.path.join(settings.STATICFILES_DIRS[0], 'js')
     static_js_dir = os.listdir(static_js_path)
     static_js_file = list(filter(r.match, static_js_dir))
@@ -95,7 +99,7 @@ def updateHistoryDB():
 
     with open(csvFile, 'r') as f:
         lines = list(csv.reader(f))
-
+        
     states = condenseTimes(lines)
     #get all items in the database to check for existing
     models = apps.get_model('boilerHistory', 'BoilerState')
@@ -115,7 +119,7 @@ def updateHistoryDB():
             histObj.heating_state = state[2][1]
             histObj.save()
 
-    #clear the existing csv file
+    # clear the existing csv file
     with open(csvFile, 'w') as f:
         #check if the last item in the csv is saying boiler is on
         #then write that line back into the csv
@@ -125,14 +129,13 @@ def updateHistoryDB():
                 continue
             elif lines[no][-1] == 'True':
                 values = lines[no][0] + ","
-                values += ",".join(lines[no][1:])
+                values += ",".join(str(v) for v in lines[no][1:])
                 values += "\n"
                 break
             else:
                 break
 
         f.write(values)
-
 
 
 
@@ -146,7 +149,7 @@ def condenseTimes(timeStates:list):
     prevStates = [0] * (len(timeStates[0]) - 1)
     #iterate over each row in the csv
     for timeState in timeStates:
-        #if no states passed, the do nothing
+        #if no states passed, then do nothing
         if len(timeState) <= 1:
             continue
         #convert strings to bool
