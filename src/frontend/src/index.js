@@ -13,6 +13,7 @@ if (appEl){
 const boilerStateRows = document.getElementById('boilerStateRows')
 if (boilerStateRows){
   ReactDOM.render(<BoilerStateList limit={0}/>, boilerStateRows);
+  
 }
 
 const boilerStateEl = document.getElementById('boilerStateCard')

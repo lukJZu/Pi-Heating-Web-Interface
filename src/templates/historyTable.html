@@ -1,30 +1,39 @@
 
-<table class="table table-striped" style="width:100%">
-    <thead class="thead-dark">
-    <tr>
-        <th>Start Time</th>
-        <th>End Time</th>
-        <th>Duration (min)</th>
-        <th>Hot Water</th>
-        <th>Heating</th>
-    </tr>
-    </thead>
-    <tbody id={% if limit == 0 %}
-        "boilerStateRows"
-    {% else %}
-        "boilerStateCard" 
-    {% endif %}
-    >
-    {% comment %} {% for state in boilerStates%}
-    <tr>
-        <td>{{state.0.start_time|date:"d M H:i"}}</td>
-        <td>{{state.0.end_time|date:"d M H:i"}}</td>
+<div>
+    <table class="table table-striped" style="width:100%">
+        <thead class="thead-dark">
+        <tr>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Duration (min)</th>
+            <th>Hot Water</th>
+            <th>Heating</th>
+        </tr>
+        </thead>
         
-        <td>{{state.1|stringformat:"d"}}</td>
-        
-        <td>{{state.0.hot_water_state|yesno:"ON,OFF"}}</td>
-        <td>{{state.0.heating_state|yesno:"ON,OFF"}}</td>
-    </tr>
-    {%endfor %} {% endcomment %}
-    <tbody>
-</table>
+        <tbody id={% if limit == 0 %}
+            "boilerStateRows"
+        {% else %}
+            "boilerStateCard" 
+        {% endif %}
+        >
+        {% comment %} {% for state in boilerStates%}
+        <tr>
+            <td>{{state.0.start_time|date:"d M H:i"}}</td>
+            <td>{{state.0.end_time|date:"d M H:i"}}</td>
+            
+            <td>{{state.1|stringformat:"d"}}</td>
+            
+            <td>{{state.0.hot_water_state|yesno:"ON,OFF"}}</td>
+            <td>{{state.0.heating_state|yesno:"ON,OFF"}}</td>
+        </tr>
+        {%endfor %} {% endcomment %}
+        <tbody>
+    </table>
+</div>
+
+<div class="text-center" id='history-table-spinner'>
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>

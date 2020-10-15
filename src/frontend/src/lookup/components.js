@@ -12,8 +12,6 @@ export function getBoilerStates(callback, limit){
     xhr.open(method, url)
     // xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
     xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest")
-    // xhr.setRequestHeader("Access-Control-Allow-Origin", "*")
-    // xhr.setRequestHeader("X-CSRFToken", csrftoken)
 
     xhr.onload = function() {
         callback(xhr.response, xhr.status)

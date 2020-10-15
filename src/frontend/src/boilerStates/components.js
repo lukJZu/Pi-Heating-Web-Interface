@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, Component} from 'react'
 
 import {getBoilerStates} from '../lookup'
 
@@ -24,6 +24,7 @@ export function BoilerStateRow(props){
             </tr>
 }
 
+
 export function BoilerStateList(prop){
     const [boilerStatesInit, setBoilerStatesInit] = useState([])
     const {limit} = prop
@@ -34,6 +35,10 @@ export function BoilerStateList(prop){
           setBoilerStatesInit(response)
         } else {
           alert("There was an error")
+        }
+        const spinnerEl = document.getElementById('history-table-spinner')
+        if (spinnerEl){
+          spinnerEl.innerHTML = ""
         }
       }
       getBoilerStates(myCallback, limit)

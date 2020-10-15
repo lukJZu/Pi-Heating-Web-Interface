@@ -79,8 +79,8 @@ class HistoryPage(View):
 
         context['title'] = "Boiler Usage History"
 
-        main_js_file = move_build_static()
-        context['js_file'] = main_js_file
+        js_files = move_build_static()
+        context['js_files'] = js_files
 
         return render(request, "boilerHistory.html", context)
 

@@ -45,13 +45,13 @@ class HomePage(View):
             next(lines, None)
             schedule = condenseTimes(list(lines))
 
-        main_js_file = move_build_static()
+        js_files = move_build_static()
         title = "Pi-Heating Dashboard"
         context = {"title":title, "currentStatesRendered":currentStatesRendered, 
                     "hotWaterSchedule": schedule, 
                     "boilerStates": reversed(states), "boostRendered":boostRendered,
                     "agileRatesRendered": agileRatesRendered,
-                    "js_file":main_js_file}
+                    "js_files":js_files}
 
         return render(request, "homepage/homepage.html", context)
 
@@ -63,31 +63,32 @@ def move_build_static():
     if not settings.DEBUG:
         return None
 
-    main_js_file = None
-    r = re.compile('^main.*js$')
     build_js_path = os.path.join(settings.BASE_DIR, 'frontend/build/static/js')
     try:
         build_js_dir = os.listdir(build_js_path)
     except FileNotFoundError:
-        build_js_file = None
-    else:
-        build_js_file = list(filter(r.match, build_js_dir))
+        build_js_dir = []
+
+    r1 = re.compile('^main.*js$')
+    r2 = re.compile('^2.*chunk.{1}js$')
     static_js_path = os.path.join(settings.STATICFILES_DIRS[0], 'js')
     static_js_dir = os.listdir(static_js_path)
-    static_js_file = list(filter(r.match, static_js_dir))
-    
-    if build_js_file:
-        main_js_file = build_js_file[0]
-        if main_js_file not in static_js_file:
-            for file_name in static_js_dir:
-                os.remove(os.path.join(static_js_path, file_name))
-            for file_name in build_js_dir:
-                shutil.move(os.path.join(build_js_path, file_name), 
-                            os.path.join(static_js_path, file_name))
-    else:
-        main_js_file = static_js_file[0]
+
+    if build_js_dir:
+        #clear the static js folder
+        for file_name in static_js_dir:
+            os.remove(os.path.join(static_js_path, file_name))
+        #move all files from build to static js folder
+        for file_name in build_js_dir:
+            shutil.move(os.path.join(build_js_path, file_name), 
+                        os.path.join(static_js_path, file_name))
         
-    return main_js_file
+    #re-fetch new file names
+    static_js_dir = os.listdir(static_js_path)
+    static_main_file = list(filter(r1.match, static_js_dir))[0]
+    static_sub_file = list(filter(r2.match, static_js_dir))[0]
+    
+    return (static_main_file, static_sub_file)
 
 
 
@@ -120,22 +121,22 @@ def updateHistoryDB():
             histObj.save()
 
     # clear the existing csv file
-    # with open(csvFile, 'w') as f:
-    #     #check if the last item in the csv is saying boiler is on
-    #     #then write that line back into the csv
-    #     values = ''
-    #     for no in range(len(lines)-1, -1, -1):
-    #         if not len(lines[no]):
-    #             continue
-    #         elif lines[no][-1] == 'True':
-    #             values = lines[no][0] + ","
-    #             values += ",".join(str(v) for v in lines[no][1:])
-    #             values += "\n"
-    #             break
-    #         else:
-    #             break
+    with open(csvFile, 'w') as f:
+        #check if the last item in the csv is saying boiler is on
+        #then write that line back into the csv
+        values = ''
+        for no in range(len(lines)-1, -1, -1):
+            if not len(lines[no]):
+                continue
+            elif lines[no][-1] == 'True':
+                values = lines[no][0] + ","
+                values += ",".join(str(v) for v in lines[no][1:])
+                values += "\n"
+                break
+            else:
+                break
 
-    #     f.write(values)
+        f.write(values)
 
 
 
