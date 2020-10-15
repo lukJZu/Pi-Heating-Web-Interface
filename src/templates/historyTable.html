@@ -10,12 +10,12 @@
     </tr>
     </thead>
     <tbody id={% if limit == 0 %}
-        "boilerStateRows"
+        "2boilerStateRows"
     {% else %}
-        "boilerStateCard" 
+        "2boilerStateCard" 
     {% endif %}
     >
-    <!-- {% for state in boilerStates%}
+    {% for state in boilerStates%}
     <tr>
         <td>{{state.0.start_time|date:"d M H:i"}}</td>
         <td>{{state.0.end_time|date:"d M H:i"}}</td>
@@ -25,6 +25,6 @@
         <td>{{state.0.hot_water_state|yesno:"ON,OFF"}}</td>
         <td>{{state.0.heating_state|yesno:"ON,OFF"}}</td>
     </tr>
-    {%endfor %} -->
+    {%endfor %}
     <tbody>
 </table>
