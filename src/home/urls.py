@@ -20,9 +20,9 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 
 from home.views import HomePage
+from home.currentStates import toggleStates, getJSONCurrentStates, setCurrentState
 from HotWaterBoost.views import stop_boost
 from boilerHistory.views import HistoryPage
-from currentStates.views import toggleStates
 from agileRates.views import agileRatesView
 from googleNest.views import GoogleNestPage#get_nest_view
 
@@ -39,6 +39,12 @@ urlpatterns = [
 ]
 
 
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL,
-            document_root=settings.STATIC_ROOT)
+#add the APIs
+urlpatterns += [
+    path('api/currentStates/', getJSONCurrentStates),
+    path('api/currentStates/change', setCurrentState),
+]
+
+# if settings.DEBUG:
+#     urlpatterns += static(settings.STATIC_URL,
+#             document_root=settings.STATIC_ROOT)

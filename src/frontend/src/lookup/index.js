@@ -1,5 +1,6 @@
-import {getBoilerStates} from './components'
+import {getBoilerStates, currentStatesLookup} from './components'
 
 export {
-    getBoilerStates
+    getBoilerStates,
+    currentStatesLookup
 }

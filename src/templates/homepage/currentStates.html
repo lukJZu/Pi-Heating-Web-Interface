@@ -3,36 +3,45 @@
     <div class="card">
         <div class="card-body">
 
-            <div class="row justify-content-center pt-3">
+            <div class="row justify-content-center pt-3" id="current-states-card-body">
 
                 <div class='col-12 mb-3' align="center">
-                    <div class="alert alert-{{boiler|yesno:"danger,success"}}" style="max-width:290px;" role="alert">
+                    <div class="alert alert-secondary" id="boiler-operation-block"
+                        style="max-width:290px;" role="alert">
                         <h3 class="alert-heading text-center">Boiler</h3>
                         <hr>
-                        <h3 class="font-weight-bold text-center">{{boiler|yesno:"ON,OFF"}}</h3>
+                        <div id="boiler-on-off-text">
+                            <div class="text-center" id="boiler-operation-spinner">
+                                <div class="spinner-border" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             
-                    <div class='col-6' align="right">
-                        <a class="btn btn-block btn-{{hotWater.background}}" style="max-width:130px;"
-                            href="/toggle/hotWater/">
-                            <h4 class="font-weight-bold alert-heading text-center pt-1">Water</h4>
-                            <hr class="alert-{{hotWater.background}}">
-                            <h6 class="text-center">{{hotWater.control|linebreaks}}</h6>
-                            <hr class="alert-{{hotWater.background}}">
-                            <h4 class="font-weight-bold text-center">{{hotWater.operation|yesno:"ON,OFF"}}</h4>
-                        </a>
-                    </div>
-                    <div class='col-6' align="left">
-                        <a class="btn btn-block btn-{{heating.background}}" style="max-width:130px;"
-                                href="/toggle/heating/">
-                            <h4 class="font-weight-bold alert-heading text-center pt-1">Heating</h4>
-                            <hr class="alert-{{heating.background}}">
-                            <h6 class="text-center">{{heating.control|linebreaks}}</h6>
-                            <hr class="alert-{{heating.background}}">
-                            <h4 class="font-weight-bold text-center">{{heating.operation|yesno:"ON,OFF"}}</h4>
-                        </a>
-                    </div>
+                <div class='col-6' align="right" id="hotWater-states-block">
+                    <a class="btn btn-block btn-secondary"
+                        style="max-width:130px;">
+                        <h4 class="font-weight-bold alert-heading text-center pt-1">Water</h4>
+                        <div class="text-center  my-5">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class='col-6' align="left" id="heating-states-block">
+                    <a class="btn btn-block btn-secondary"
+                        style="max-width:130px;">
+                        <h4 class="font-weight-bold alert-heading text-center pt-1">Heating</h4>
+                        <div class="text-center my-5">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
 
             </div>
         </div>

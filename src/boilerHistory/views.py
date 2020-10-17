@@ -71,12 +71,6 @@ class HistoryPage(View):
                 states['hotWater']['pastMonthAvg'] = hot_water_past_month
                 json.dump(states, f)
 
-            states = []
-            for state in allStates:
-                duration = (state.end_time - state.start_time).seconds / 60
-                states.append((state, duration))
-            context['states'] = list(reversed(states))
-
         context['title'] = "Boiler Usage History"
 
         js_files = move_build_static()

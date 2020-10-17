@@ -4,10 +4,10 @@ import {getBoilerStates} from '../lookup'
 
 export function BoilerStateRow(props){
     const {boilerState} = props
-    // const className = props.className ? props.className : "col-10 mx-auto col-md-6"
     const startTime = new Date(boilerState.start_time)
     const endTime = new Date(boilerState.end_time)
-
+    
+    //calcuating the difference in minutes and round to integers
     var diff = endTime.getTime() - startTime.getTime()
     diff = diff / 1000 / 60
     diff = diff.toFixed(0)
@@ -36,13 +36,14 @@ export function BoilerStateList(prop){
         } else {
           alert("There was an error")
         }
+        //hide the spinner
         const spinnerEl = document.getElementById('history-table-spinner')
         if (spinnerEl){
           spinnerEl.innerHTML = ""
         }
       }
       getBoilerStates(myCallback, limit)
-      }, [])
+    }, [])
       
 
       return boilerStatesInit.map((boilerState, index)=>{

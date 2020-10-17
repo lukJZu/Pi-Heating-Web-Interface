@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     # 'homepage',
     'boilerHistory',
     'HotWaterBoost',
-    "currentStates",
     "agileRates",
     "googleNest",
 

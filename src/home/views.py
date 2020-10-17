@@ -2,21 +2,21 @@ import os, csv, sys, re, glob, shutil
 import iso8601
 from dateutil.tz import tzlocal 
 
-import django.http
+# import django.http
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.apps import apps
 from django.views import View
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
+# from django.contrib.auth.decorators import login_required
+# from django.contrib.admin.views.decorators import staff_member_required
 
 from home.constants import homePath
-
+from home.currentStates import CurrentStateView
 from HotWaterBoost.views import BoostView
-from currentStates.views import CurrentStateView
 from agileRates.views import agileRatesView
+
 
 # @method_decorator(staff_member_required, name = 'get')
 class HomePage(View):
@@ -24,20 +24,9 @@ class HomePage(View):
 
     def get(self, request):
         boostRendered = self.boostView.get(request)
-        currentStatesRendered = CurrentStateView().get(request)
         agileRatesRendered = agileRatesView().get(request, count = 3)
         #checking for new states to be updated into the DB
         updateHistoryDB()
-        #get the history model
-        boilerStates = apps.get_model('boilerHistory', 'BoilerState')
-
-        #getting the latest 5 states
-        fiveStates = boilerStates.objects.all().order_by('-start_time')[:5]
-        #calculating and storing the duration
-        states = []
-        for state in fiveStates:
-            duration = (state.end_time - state.start_time).seconds / 60
-            states.append((state, duration))
 
         #getting the hot water schedule
         with open(os.path.join(homePath, 'data', 'hotWaterSchedule.csv'), 'r') as f:
@@ -47,9 +36,9 @@ class HomePage(View):
 
         js_files = move_build_static()
         title = "Pi-Heating Dashboard"
-        context = {"title":title, "currentStatesRendered":currentStatesRendered, 
-                    "hotWaterSchedule": schedule, 
-                    "boilerStates": reversed(states), "boostRendered":boostRendered,
+        context = {"title":title,
+                    "hotWaterSchedule": schedule,
+                    "boostRendered":boostRendered,
                     "agileRatesRendered": agileRatesRendered,
                     "js_files":js_files}
 
@@ -129,10 +118,10 @@ def updateHistoryDB():
             if not len(lines[no]):
                 continue
             elif lines[no][-1] == 'True':
-                values = lines[no][0] + ","
-                values += ",".join(str(v) for v in lines[no][1:])
-                values += "\n"
-                break
+                value = lines[no][0] + ","
+                value += ",".join(str(v) for v in lines[no][1:])
+                value += "\n"
+                values = value + values
             else:
                 break
 
