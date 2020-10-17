@@ -26,12 +26,6 @@ def setup_operation_states():
     if 'Windows' in platform.system():
         operationStates = [True, False, True]
     else:
-        # import RPi.GPIO as GPIO
-
-        # GPIO.setmode(GPIO.BCM)
-        # GPIO.setup(17, GPIO.OUT)
-        # GPIO.setup(18, GPIO.OUT)
-        # GPIO.setup(23, GPIO.IN)
         operationStates = []
     return operationStates
 
@@ -44,17 +38,20 @@ def saveStatesJSON(jsonDict):
     with open(stateJsonPath, 'w') as f:
         json.dump(jsonDict, f)
 
-def toggleStates(request, device):
-    jsonStates = loadStatesJSON()
-    jsonStates[device]['state'] = not jsonStates[device]['state']
-    saveStatesJSON(jsonStates)
-    return redirect('/')
+# def toggleStates(request, device):
+#     jsonStates = loadStatesJSON()
+#     jsonStates[device]['state'] = not jsonStates[device]['state']
+#     saveStatesJSON(jsonStates)
+#     return redirect('/')
 
 @api_view(['POST'])
 def setCurrentState(request, *args, **kwargs):
     data = request.data
     jsonStates = loadStatesJSON()
     jsonStates[data['device']]['state'] = data['state']
+    if data['device'] == 'heating' and 'RPi.GPIO' in sys.modules:
+        GPIO.output(18, data['state'])
+
     saveStatesJSON(jsonStates)
 
     return Response(jsonStates, status=201)
