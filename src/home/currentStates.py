@@ -1,4 +1,4 @@
-import platform, json
+import platform, json, sys
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.template import loader
@@ -9,17 +9,29 @@ from rest_framework.response import Response
 
 from home.constants import homePath, stateJsonPath
 
+try:
+    import RPi.GPIO as GPIO
+except ImportError:
+    operationStates = [True, False, True]
+else:
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(17, GPIO.OUT)
+    GPIO.setup(18, GPIO.OUT)
+    GPIO.setup(23, GPIO.IN)
+    operationStates = []
+
+
 #for debugging on PC
 def setup_operation_states():
     if 'Windows' in platform.system():
         operationStates = [True, False, True]
     else:
-        import RPi.GPIO as GPIO
+        # import RPi.GPIO as GPIO
 
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(17, GPIO.OUT)
-        GPIO.setup(18, GPIO.OUT)
-        GPIO.setup(23, GPIO.IN)
+        # GPIO.setmode(GPIO.BCM)
+        # GPIO.setup(17, GPIO.OUT)
+        # GPIO.setup(18, GPIO.OUT)
+        # GPIO.setup(23, GPIO.IN)
         operationStates = []
     return operationStates
 
