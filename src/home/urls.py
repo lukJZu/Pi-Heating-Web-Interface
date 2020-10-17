@@ -20,7 +20,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 
 from home.views import HomePage
-from home.currentStates import toggleStates, getJSONCurrentStates, setCurrentState
+from home.currentStates import getJSONCurrentStates, setCurrentState
 from HotWaterBoost.views import stop_boost
 from boilerHistory.views import HistoryPage
 from agileRates.views import agileRatesView
@@ -32,7 +32,6 @@ urlpatterns = [
     path('react/', TemplateView.as_view(template_name='react.html')),
     path('admin/', admin.site.urls),
     path('stop_boost/', stop_boost),
-    path('toggle/<str:device>/', toggleStates),
     path('history/', HistoryPage.as_view()), 
     path('agile_rates/', agileRatesView.as_view()), 
     path('google_nest/', GoogleNestPage.as_view()),
