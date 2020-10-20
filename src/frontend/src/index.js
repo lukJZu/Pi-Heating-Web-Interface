@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import { BoilerStateList } from './boilerStates'
-import { AgileRateList } from './agileRates'
+import { AgileRateCard, AgileRateList } from './agileRates'
 import { populateCurrentStates } from './currentStates';
 import { APILookup } from './lookup'
 import * as serviceWorker from './serviceWorker';
@@ -29,11 +29,22 @@ if (agileRatesEl){
   ReactDOM.render(<AgileRateList />, agileRatesEl);
 }
 
+var agileRatesCardEl = document.getElementById('agile-rates-card')
+if (agileRatesCardEl){
+    ReactDOM.render(<AgileRateCard type={'homepage'}/>, agileRatesCardEl);
+}
+agileRatesCardEl = document.getElementById('agile-rates-page-cards')
+if (agileRatesCardEl){
+    ReactDOM.render(<AgileRateCard type={'top'}/>, agileRatesCardEl);
+}
 
 const currentStatesEl = document.getElementById('current-states-card-body')
 if (currentStatesEl){
     APILookup('GET', 'currentStates', populateCurrentStates, {})
 }
+
+
+
 // const currentStatesEl = document.getElementById('current-states-card-body')
 // if (boilerStateEl){
 //   ReactDOM.render(<CurrentStatesCard />, currentStatesEl);

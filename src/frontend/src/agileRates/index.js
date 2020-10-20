@@ -1,5 +1,5 @@
-import {AgileRateRow, AgileRateList} from './components'
+import {AgileRateRow, AgileRateList, AgileRateCard} from './components'
 
 export {
-    AgileRateRow, AgileRateList
+    AgileRateRow, AgileRateList, AgileRateCard
 }

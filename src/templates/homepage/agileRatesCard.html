@@ -5,18 +5,32 @@
             <h4 class="card-title mb-3">
                 Agile Rates
             </h4>
-            <div class="content">
-                <h4 class="display-6">Current</h4>
-                <h6 class="lead">{{current.2}}p</h6>
+            <div class="content" id="agile-rates-card">
+                <div class="row">
+                    <div class='col-6'>
+                        <h4>Current</h4>
+                        <h6 class="lead">{{current.2}}p</h6>
+                    </div>
+                    <div class='col-6'>
+                        <h4 class="display-6">Current</h4>
+                        <h6 class="lead">{{current.2}}p</h6>
+                    </div>
+                </div>
                 <hr class="alert-dark my-4">
                 <h5 class="display-6">Next Two</h5>
                 <h6 class="lead">{{next.0.2}}p</h6>
                 <h6 class="lead">{{next.1.2}}p</h6>
                 <p></p>
-                <p class="lead">
-                    <a class="btn btn-primary btn-md  float-right" href="/agile_rates/" role="button">View All</a>
-                </p>
+
             </div>
+            <div class="text-center" id='agile-rates-card-spinner'>
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            <p class="lead">
+                <a class="btn btn-primary btn-md  float-right" href="/agile_rates/" role="button">View All</a>
+            </p>
         </div>
     </div>
 </div>
