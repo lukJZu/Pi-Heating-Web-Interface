@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import {BoilerStateList} from './boilerStates'
+import { BoilerStateList } from './boilerStates'
+import { AgileRateList } from './agileRates'
 import { populateCurrentStates } from './currentStates';
-import { currentStatesLookup } from './lookup'
+import { APILookup } from './lookup'
 import * as serviceWorker from './serviceWorker';
 
 const appEl = document.getElementById('root')
@@ -23,7 +24,16 @@ if (boilerStateEl){
   ReactDOM.render(<BoilerStateList limit={5}/>, boilerStateEl);
 }
 
-currentStatesLookup('GET', '', populateCurrentStates, {})
+const agileRatesEl = document.getElementById('agileRateTable')
+if (agileRatesEl){
+  ReactDOM.render(<AgileRateList />, agileRatesEl);
+}
+
+
+const currentStatesEl = document.getElementById('current-states-card-body')
+if (currentStatesEl){
+    APILookup('GET', 'currentStates', populateCurrentStates, {})
+}
 // const currentStatesEl = document.getElementById('current-states-card-body')
 // if (boilerStateEl){
 //   ReactDOM.render(<CurrentStatesCard />, currentStatesEl);

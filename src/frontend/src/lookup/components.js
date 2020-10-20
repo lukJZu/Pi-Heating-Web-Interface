@@ -20,38 +20,38 @@ function getCookie(name) {
     return cookieValue;
   }
 
-export function getBoilerStates(callback, limit){
+// export function getBoilerStates(callback, limit){
 
-    //set limit to 0 if no limit is defined
-    limit = limit ? limit : 0
+//     //set limit to 0 if no limit is defined
+//     limit = limit ? limit : 0
 
-    const xhr = new XMLHttpRequest()
-    const url = `${domain}/api/boilerStates/${limit}`
+//     const xhr = new XMLHttpRequest()
+//     const url = `${domain}/api/boilerStates/${limit}`
   
-    xhr.responseType = "json"
-    xhr.open('GET', url)
-    // xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
-    xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest")
+//     xhr.responseType = "json"
+//     xhr.open('GET', url)
+//     // xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+//     xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest")
 
-    xhr.onload = function() {
-        callback(xhr.response, xhr.status)
-    }
-    xhr.onerror = function (e) {
-      console.log(e)
-      callback({"message": "The boiler history request was an error"}, 400)
-    }
-    xhr.send()
+//     xhr.onload = function() {
+//         callback(xhr.response, xhr.status)
+//     }
+//     xhr.onerror = function (e) {
+//       console.log(e)
+//       callback({"message": "The boiler history request was an error"}, 400)
+//     }
+//     xhr.send()
   
-}
+// }
 
 
-export function currentStatesLookup(method, endpoint, callback, data){
+export function APILookup(method, endpoint, callback, data){
     let jsonData;
     if (data){
       jsonData = JSON.stringify(data)
     }
     const xhr = new XMLHttpRequest()
-    const url = `${domain}/api/currentStates/${endpoint}`
+    const url = `${domain}/api/${endpoint}`
     
     xhr.responseType = "json"
     const csrftoken = getCookie('csrftoken');
@@ -60,7 +60,6 @@ export function currentStatesLookup(method, endpoint, callback, data){
     xhr.setRequestHeader("Content-Type", "application/json")
 
     if (csrftoken){
-        // xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
         xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
         xhr.setRequestHeader("X-CSRFToken", csrftoken)
     }

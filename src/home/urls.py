@@ -23,7 +23,7 @@ from home.views import HomePage
 from home.currentStates import getJSONCurrentStates, setCurrentState
 from HotWaterBoost.views import stop_boost
 from boilerHistory.views import HistoryPage
-from agileRates.views import agileRatesView
+from agileRates.views import agileRatesView, getJSONAgileRates
 from googleNest.views import GoogleNestPage#get_nest_view
 
 urlpatterns = [
@@ -42,6 +42,7 @@ urlpatterns = [
 urlpatterns += [
     path('api/currentStates/', getJSONCurrentStates),
     path('api/currentStates/change', setCurrentState),
+    path('api/agileRates/', getJSONAgileRates),
 ]
 
 # if settings.DEBUG:

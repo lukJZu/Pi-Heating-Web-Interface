@@ -26,10 +26,21 @@
         {% endblock%}
     </div>
     
-    {% comment %} { % render_bundle 'main' % } {% endcomment %}
     {% include 'react/base_embed.html' %}
     {% include 'react/js.html' with js_files=js_files%}
-    
+    <script>
+        //auto-reload page at :00 and :30
+        function checkTimeRefresh(){
+            var now = new Date()
+            minNow = now.getMinutes()
+            var diff = (minNow >= 30) ? 60 : 30
+            diff = diff - minNow
+            
+            setTimeout(function(){location.reload()}, diff*60*1000)
+        }
+
+        checkTimeRefresh()
+
+    </script>
   </body>
-  {% comment %} <script src="{% static "main.js" %}"></script> {% endcomment %}
 </html>

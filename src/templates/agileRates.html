@@ -56,37 +56,15 @@
                         <th>Rate</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    {% for rate in rates%}
-                        {% if rate.2 == todayMin.rate and rate.0|localtime|date:"d" == today %}
-                            <tr class="table-info">
-                        {% elif rate.2 == tmrMin.rate and rate.0|localtime|date:"d" != today %}<!---->
-                            <tr class="table-primary">
-                        {% elif rate.2 < 0 %}
-                            <tr class="table-success">
-                        {% elif rate.2 > 15 %}
-                            <tr class="table-danger">
-                        {% elif rate.0|localtime|date:"d H:i" <= current_time and current_time < rate.1|localtime|date:"d H:i" %}
-                            <tr class="table-light">
-                        {% elif rate.0|localtime|date:"H:i" < time_now and rate.0|localtime|date:"d" == today %}
-                            <tr class="table-secondary">
-                        {% else %}
-                            <tr>
-                    {% endif %}
-                    {% if rate.0|localtime|date:"d H:i" <= current_time and current_time < rate.1|localtime|date:"d H:i" %}
-                        {% comment %} <td><h3>{%now "H:i"%}</h3></td> {% endcomment %}
-                        <td><h5 class="font-weight-bold">{{rate.0|localtime|date:"d M H:i"}}</h5></td>
-                        <td><h5 class="font-weight-bold">{{rate.1|localtime|date:"d M H:i"}}</h5></td>
-                        <td><h5 class="font-weight-bold">{{rate.2|stringformat:".3f"}}p</h5></td>
-                    {% else %}
-                        <td>{{rate.0|localtime|date:"d M H:i"}}</td>
-                        <td>{{rate.1|localtime|date:"d M H:i"}}</td>
-                        <td>{{rate.2|stringformat:".3f"}}p</td>
-                    {% endif %}
-                    </tr>
-                    {%endfor %}
+                    <tbody id="agileRateTable">
                     <tbody>
                     </table> 
+                
+                <div class="text-center" id='agile-rates-table-spinner'>
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

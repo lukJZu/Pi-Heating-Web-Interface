@@ -1,6 +1,5 @@
-import {getBoilerStates, currentStatesLookup} from './components'
+import { APILookup } from './components'
 
 export {
-    getBoilerStates,
-    currentStatesLookup
+    APILookup
 }

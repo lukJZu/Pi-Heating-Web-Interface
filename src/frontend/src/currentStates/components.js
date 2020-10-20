@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom';
 
-import { currentStatesLookup } from '../lookup'
+import { APILookup } from '../lookup'
 
 
 function CategoryStatesBlock(props){
@@ -38,13 +38,13 @@ function CategoryStatesBlock(props){
         //callback for then the state change POST method has returned
         const returnCallBack = (response, status) =>{
             if (status === 201){
-                currentStatesLookup('GET', '', populateCurrentStates, {})
+                APILookup('GET', 'currentStates', populateCurrentStates, {})
             } else {
                 alert('State change failed')
             }
         }
 
-        currentStatesLookup('POST', 'change', 
+        APILookup('POST', 'currentStates/change', 
                             returnCallBack, data)
 
     }
