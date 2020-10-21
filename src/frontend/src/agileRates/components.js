@@ -140,12 +140,11 @@ export function AgileRateCard(props){
                     { nextTwoRates.length > 0 && <h5 className="lead">{nextTwoRates[0]}p</h5>}
                     { nextTwoRates.length > 1 && <h5 className="lead">{nextTwoRates[1]}p</h5>}
                 </div>
-                <div className='col-6'>
+                {tmrsMinRate && <div className='col-6'>
                     <h4 className="display-6">Tomorrow's Lowest</h4>
                     <h5 className="lead">{tmrsMinRate}p</h5>
-                    <span style={{fontSize:"95%"}}>
-                        at {tmrsMin.map(convertToDate).join()}</span>
-                </div>
+                    <span style={{fontSize:"95%"}}>at {tmrsMin.map(convertToDate).join()}</span>
+                </div>}
             </div>
         </div>) : (
         <div className="row justify-content-center">
@@ -171,8 +170,8 @@ export function AgileRateCard(props){
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-title mb-3">Tomorrow's Lowest</h5>
-                        <h3 className="font-weight-bold mb-3">{tmrsMinRate}p</h3>
-                        <h5>at {tmrsMin.map(convertToDate).join()}</h5>
+                        {tmrsMinRate && <h3 className="font-weight-bold mb-3">{tmrsMinRate}p</h3>}
+                        {tmrsMinRate && <h5>at {tmrsMin.map(convertToDate).join()}</h5>}
                     </div>
                 </div>
             </div>
