@@ -6,6 +6,7 @@ import { BoilerStateList } from './boilerStates'
 import { AgileRateCard, AgileRateList } from './agileRates'
 import { populateCurrentStates } from './currentStates';
 import { APILookup } from './lookup'
+import { NestCard } from './googleNest'
 import * as serviceWorker from './serviceWorker';
 
 const appEl = document.getElementById('root')
@@ -36,6 +37,10 @@ if (agileRatesCardEl){
 agileRatesCardEl = document.getElementById('agile-rates-page-cards')
 if (agileRatesCardEl){
     ReactDOM.render(<AgileRateCard type={'top'}/>, agileRatesCardEl);
+}
+const nestCardEl = document.getElementById('nest-card-content')
+if (nestCardEl){
+    ReactDOM.render(<NestCard />, nestCardEl);
 }
 
 const currentStatesEl = document.getElementById('current-states-card-body')

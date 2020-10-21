@@ -34,7 +34,6 @@ urlpatterns = [
     path('stop_boost/', stop_boost),
     path('history/', HistoryPage.as_view()), 
     path('agile_rates/', agileRatesView.as_view()), 
-    path('google_nest/', GoogleNestPage.as_view()),
 ]
 
 
@@ -43,6 +42,7 @@ urlpatterns += [
     path('api/currentStates/', getJSONCurrentStates),
     path('api/currentStates/change', setCurrentState),
     path('api/agileRates/', getJSONAgileRates),
+    path('api/googleNest/', GoogleNestPage.as_view()),
 ]
 
 # if settings.DEBUG:

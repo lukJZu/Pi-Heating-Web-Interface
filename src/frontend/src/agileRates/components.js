@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import {hideSpinner} from '../common'
 
 import {APILookup} from '../lookup'
 
@@ -53,10 +54,7 @@ export function AgileRateList(prop){
         }
         
         //hide the spinner
-        const spinnerEl = document.getElementById('agile-rates-table-spinner')
-        if (spinnerEl){
-          spinnerEl.innerHTML = ""
-        }
+        hideSpinner('agile-rates-table-spinner')
       }
       APILookup('GET', 'agileRates', myCallback)
     }, [])
@@ -85,7 +83,7 @@ export function AgileRateCard(props){
         var tmrsMinRateTime = new Date(tmrsMin[0])
 
         var timeNow = new Date()
-        var currentRate, validFrom, nextTwoRates = []
+        var currentRate = 9999, validFrom, nextTwoRates = [9999, 9999]
         for (var i = 0; i < agileRatesInit.length; i++){
             var startTime = new Date(agileRatesInit[i].valid_from)
             var endTime = new Date(agileRatesInit[i].valid_to)
@@ -95,10 +93,10 @@ export function AgileRateCard(props){
                 validFrom = new Date(agileRatesInit[i].valid_from)
                 //storing the next two rates
                 if (i < agileRatesInit.length - 1){
-                    nextTwoRates.push(agileRatesInit[i+1].rate)
+                    nextTwoRates[0] = agileRatesInit[i+1].rate
                 }
                 if (i < agileRatesInit.length - 2){
-                    nextTwoRates.push(agileRatesInit[i+2].rate)
+                    nextTwoRates[1] = agileRatesInit[i+2].rate
                 }
             }
 
@@ -122,13 +120,13 @@ export function AgileRateCard(props){
             <div className="row">
                 <div className='col-6'>
                     <h4 className="display-6">Current</h4>
-                    <h5 className="lead">{currentRate}p</h5>
+                    <h5 className="lead">{currentRate.toFixed(3)}p</h5>
                     <span style={{fontSize:"95%"}}>
                         since {validFrom.toLocaleTimeString('en-gb', timeOptions)}</span>
                 </div>
                 <div className='col-6'>
                     <h4 className="display-6">Today's Lowest</h4>
-                    <h5 className="lead">{todaysMinRate}p</h5>
+                    <h5 className="lead">{todaysMinRate ? todaysMinRate.toFixed(3): ''}p</h5>
                     <span style={{fontSize:"95%"}}>
                         at {todaysMin.map(convertToDate).join()}</span>
                 </div>
@@ -137,12 +135,12 @@ export function AgileRateCard(props){
             <div className="row">
                 <div className='col-6'>
                     <h4 className="display-6">Next Two</h4>
-                    { nextTwoRates.length > 0 && <h5 className="lead">{nextTwoRates[0]}p</h5>}
-                    { nextTwoRates.length > 1 && <h5 className="lead">{nextTwoRates[1]}p</h5>}
+                    { nextTwoRates[0] !== 9999 && <h5 className="lead">{nextTwoRates[0].toFixed(3)}p</h5>}
+                    { nextTwoRates[1] !== 9999 && <h5 className="lead">{nextTwoRates[1].toFixed(3)}p</h5>}
                 </div>
                 {tmrsMinRate && <div className='col-6'>
                     <h4 className="display-6">Tomorrow's Lowest</h4>
-                    <h5 className="lead">{tmrsMinRate}p</h5>
+                    <h5 className="lead">{tmrsMinRate.toFixed(3)}p</h5>
                     <span style={{fontSize:"95%"}}>at {tmrsMin.map(convertToDate).join()}</span>
                 </div>}
             </div>
@@ -152,7 +150,7 @@ export function AgileRateCard(props){
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-title mb-3">Current Rate</h5>
-                        <h3 className="font-weight-bold mb-3">{currentRate}p</h3>
+                        <h3 className="font-weight-bold mb-3">{currentRate.toFixed(3)}p</h3>
                         <h5>since {validFrom.toLocaleTimeString('en-gb', timeOptions)}</h5>
                     </div>
                 </div>
@@ -161,7 +159,7 @@ export function AgileRateCard(props){
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-titl mb-3">Today's Lowest</h5>
-                        <h3 className="font-weight-bold mb-3">{todaysMinRate}p</h3>
+                        <h3 className="font-weight-bold mb-3">{todaysMinRate ? '':todaysMinRate.toFixed(3)}p</h3>
                         <h5>at {todaysMin.map(convertToDate).join()}</h5>
                     </div>
                 </div>
@@ -170,8 +168,8 @@ export function AgileRateCard(props){
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-title mb-3">Tomorrow's Lowest</h5>
-                        {tmrsMinRate && <h3 className="font-weight-bold mb-3">{tmrsMinRate}p</h3>}
-                        {tmrsMinRate && <h5>at {tmrsMin.map(convertToDate).join()}</h5>}
+                        {tmrsMinRate !== 9999 && <h3 className="font-weight-bold mb-3">{tmrsMinRate.toFixed(3)}p</h3>}
+                        {tmrsMinRate !== 9999 &&  <h5>at {tmrsMin.map(convertToDate).join()}</h5>}
                     </div>
                 </div>
             </div>
@@ -192,10 +190,7 @@ export function AgileRateCard(props){
             }
           
             //hide the spinner
-            const spinnerEl = document.getElementById('agile-rates-card-spinner')
-            if (spinnerEl){
-            spinnerEl.innerHTML = ""
-            }
+            hideSpinner('agile-rates-card-spinner')
         }
         APILookup('GET', 'agileRates', myCallback)
     }, [])

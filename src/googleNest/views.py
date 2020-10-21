@@ -21,12 +21,24 @@ class GoogleNestPage(View):
 
         access_token = get_access_token()
         url = f"https://smartdevicemanagement.googleapis.com/v1/enterprises/{project_id}/devices/{device_id}"
+
+        # setData = {
+        #     "command" : "sdm.devices.commands.ThermostatTemperatureSetpoint.SetHeat",
+        #     "params" : {
+        #         "heatCelsius" : 20.5
+        #     }
+        # }
         
         resp = requests.get(url, headers={"Content-Type": "application/json", 
                                 "Authorization": f"Bearer {access_token}"})
         
         if resp.status_code != 200:
             raise ConnectionRefusedError
+
+        # x = requests.post(url+':executeCommand', headers={"Content-Type": "application/json", 
+        #                 "Authorization": f"Bearer {access_token}"},
+        #                 data=json.dumps(setData))
+        # print(x.json())
 
         return resp.json()
 
