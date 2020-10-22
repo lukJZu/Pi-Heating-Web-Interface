@@ -7,11 +7,12 @@ import { AgileRateCard, AgileRateList } from './agileRates'
 import { populateCurrentStates } from './currentStates';
 import { APILookup } from './lookup'
 import { NestCard } from './googleNest'
+import Consumption from './consumptionHistory'
 import * as serviceWorker from './serviceWorker';
 
 const appEl = document.getElementById('root')
 if (appEl){
-  ReactDOM.render(<React.StrictMode><App/></React.StrictMode>, appEl);
+  ReactDOM.render(<Consumption />, appEl);
 }
 
 const boilerStateRows = document.getElementById('boilerStateRows')
@@ -48,7 +49,16 @@ if (currentStatesEl){
     APILookup('GET', 'currentStates', populateCurrentStates, {})
 }
 
+const consumptionTableEl = document.getElementById('consumption-page')
+if (consumptionTableEl){
+    ReactDOM.render(<Consumption />, consumptionTableEl);
+}
 
+
+// const chartEl = document.getElementById('consumption-page-chart')
+// if (chartEl){
+//     ReactDOM.render(<LeccyUseChart />, chartEl);
+// }
 
 // const currentStatesEl = document.getElementById('current-states-card-body')
 // if (boilerStateEl){

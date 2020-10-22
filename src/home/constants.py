@@ -9,4 +9,4 @@ else:
 
 stateJsonPath = os.path.join(homePath, 'data', 'states.json')
 agileRatesPath = os.path.join(homePath, 'data', 'agileRates.csv')
-agileRatesDFPath = os.path.join(homePath, 'data', 'agileRatesHistory.df')
+consumptionDFPath = os.path.join(homePath, 'data', 'consumptionHistory.df')

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {APILookup} from '../lookup'
-// import {hideSpinner} from '../common'
+// import InputSpinner from "react-native-input-spinner";
 
 export function NestCard(props){
     const [ambientTemp, setAmbientTemp] = useState([])
@@ -26,9 +26,8 @@ export function NestCard(props){
 
     return ( typeof(ambientTemp) === 'number' ?
         <div>
-            <h5>Ambient Temp:  {ambientTemp} </h5>
-            <h5>Thermostat Set Temp: {thermostatTemp}</h5>
-            <input type="number" value={thermostatTemp} min="10" max="30" step="0.25" data-decimals="2" data-suffix="°C"/>
+            <h5>Ambient Temp:  {ambientTemp.toFixed(2)} </h5>
+            <h5>Thermostat Set Temp: {thermostatTemp.toFixed(2)}</h5>
         </div>
         : 
         <div class="text-center">

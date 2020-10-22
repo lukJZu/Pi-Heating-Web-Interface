@@ -11,7 +11,13 @@
     "react": "^16.13.1",
     "react-bootstrap": "^1.4.0",
     "react-dom": "^16.13.1",
+    "react-native": "^0.63.3",
     "react-scripts": "^3.4.4"
+  },
+  "babel": {
+    "plugins": [
+      "recharts"
+    ]
   },
   "scripts": {
     "start": "react-scripts start",
@@ -38,6 +44,11 @@
     ]
   },
   "devDependencies": {
-    "npm-watch": "^0.7.0"
+    "babel-plugin-recharts": "^1.2.1",
+    "chart.js": "^2.9.4",
+    "npm-watch": "^0.7.0",
+    "react-chartjs-2": "^2.10.0",
+    "react-select": "^3.1.0",
+    "recharts": "^1.8.5"
   }
 }

@@ -159,7 +159,7 @@ export function AgileRateCard(props){
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-titl mb-3">Today's Lowest</h5>
-                        <h3 className="font-weight-bold mb-3">{todaysMinRate ? '':todaysMinRate.toFixed(3)}p</h3>
+                        <h3 className="font-weight-bold mb-3">{todaysMinRate ? todaysMinRate.toFixed(3) : ''}p</h3>
                         <h5>at {todaysMin.map(convertToDate).join()}</h5>
                     </div>
                 </div>
@@ -168,8 +168,8 @@ export function AgileRateCard(props){
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-title mb-3">Tomorrow's Lowest</h5>
-                        {tmrsMinRate !== 9999 && <h3 className="font-weight-bold mb-3">{tmrsMinRate.toFixed(3)}p</h3>}
-                        {tmrsMinRate !== 9999 &&  <h5>at {tmrsMin.map(convertToDate).join()}</h5>}
+                        <h3 className="font-weight-bold mb-3">{tmrsMinRate ? tmrsMinRate.toFixed(3) : ''}{tmrsMinRate && `p`}</h3>
+                        {tmrsMinRate && <h5>at {tmrsMin.map(convertToDate).join()}</h5>}
                     </div>
                 </div>
             </div>

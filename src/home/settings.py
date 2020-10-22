@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'HotWaterBoost',
     "agileRates",
     "googleNest",
+    "consumptionHistory",
 
     'corsheaders',            # add this
     'rest_framework',         # add this
