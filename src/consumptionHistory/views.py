@@ -13,12 +13,15 @@ import pandas as pd
 def getJSONLeccyUse(request, *args, **kwargs):
     
     df = pd.read_pickle(consumptionDFPath)
-    df = df.dropna()
+    # converting nans to Nones
+    df = df.where(pd.notnull(df), None)
+    # df = df.dropna()
+
     df = df.sort_values('interval_start', ascending=False)
     use_dict = df.to_dict(orient='records')
     
     resp_dict = {
-                'leccyUse':use_dict
+                    'leccyUse':use_dict
                 }
 
     return Response(resp_dict, status=200)

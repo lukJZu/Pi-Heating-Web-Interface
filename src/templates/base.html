@@ -13,6 +13,8 @@
     <!-- Bootstrap CSS -->
     {% comment %} <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"> {% endcomment %}
     
+    {% comment %} <link rel="stylesheet" href="{% static 'css/date-picker.css' %}"> {% endcomment %}
+    <link rel="stylesheet" href="{% static 'css/react-datepicker.css' %}">
     <link rel="stylesheet" href="{% static 'main.css'%}">
     <link rel="stylesheet" href="{% static 'darkly.min.css' %}">
 
@@ -42,9 +44,9 @@
         checkTimeRefresh()
 
     </script>
-    <script src="/static/spinner.js"></script>
+    {% comment %} <script src="/static/spinner.js"></script>
     <script>
         $("input[type='number']").inputSpinner();
-    </script> 
+    </script>  {% endcomment %}
   </body>
 </html>

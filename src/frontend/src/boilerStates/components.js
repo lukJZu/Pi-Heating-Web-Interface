@@ -1,24 +1,17 @@
 import React, {useEffect, useState, Component} from 'react'
+import moment from 'moment';
 
 import {APILookup} from '../lookup'
 
 export function BoilerStateRow(props){
     const {boilerState} = props
-    const startTime = new Date(boilerState.start_time)
-    const endTime = new Date(boilerState.end_time)
-    
-    //calcuating the difference in minutes and round to integers
-    var diff = endTime.getTime() - startTime.getTime()
-    diff = diff / 1000 / 60
-    diff = diff.toFixed(0)
-
-    let dateOptions = {'day':'numeric', 'month': 'short'}
-    let timeOptions = {'hour':'numeric', 'minute': 'numeric'}
+    const startTime = moment(boilerState.start_time)
+    const endTime = moment(boilerState.end_time)
 
     return <tr>
-              <td>{startTime.toLocaleDateString('en-gb', dateOptions)} {startTime.toLocaleTimeString('en-gb', timeOptions)}</td>
-              <td>{endTime.toLocaleDateString('en-gb', dateOptions)} {endTime.toLocaleTimeString('en-gb', timeOptions)}</td>
-              <td>{diff}</td>
+              <td>{startTime.format("DD MMM HH:mm")}</td>
+              <td>{endTime.format("DD MMM HH:mm")}</td>
+              <td>{endTime.diff(startTime, 'm')}</td>
               <td>{boilerState.hot_water_state ? "ON":"OFF"}</td>
               <td>{boilerState.heating_state ? "ON":"OFF"}</td>
             </tr>

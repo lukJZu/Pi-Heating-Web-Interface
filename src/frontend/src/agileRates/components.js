@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react'
 import {hideSpinner} from '../common'
+import moment from 'moment';
 
 import {APILookup} from '../lookup'
 
 export function AgileRateRow(props){
     const {agileRate, todaysMin, tmrsMin} = props
-    const startTime = new Date(agileRate.valid_from)
-    const endTime = new Date(agileRate.valid_to)
+    const startTime = moment(agileRate.valid_from)
+    const endTime = moment(agileRate.valid_to)
     const rate = agileRate.rate
-    const timeNow = new Date()
+    const timeNow = moment()
 
     let dateOptions = {'weekday': 'short', 'day':'numeric', 'month': 'short'}
     let timeOptions = {'hour':'numeric', 'minute': 'numeric'}
@@ -21,18 +22,18 @@ export function AgileRateRow(props){
         rowColour = 'danger'
     } else if (rate < 0){
         rowColour = 'success'
-    } else if (timeNow > endTime){
+    } else if (timeNow.isAfter(endTime)){
         rowColour = 'secondary'
-    } else if (timeNow < endTime && timeNow > startTime){
+    } else if (timeNow.isBetween(startTime, endTime)){
         rowColour = 'light'
         fontWeight = 'font-weight-bold'
     }
 
     return <tr className={`table-${rowColour}`}>
                 <td className={fontWeight}>
-                  {startTime.toLocaleDateString('en-gb', dateOptions)} {startTime.toLocaleTimeString('en-gb', timeOptions)}
+                  {startTime.format("ddd DD MMM HH:mm")}
                 </td>
-                <td className={fontWeight}>{endTime.toLocaleDateString('en-gb', dateOptions)} {endTime.toLocaleTimeString('en-gb', timeOptions)}</td>
+                <td className={fontWeight}>{endTime.format("ddd DD MMM HH:mm")}</td>
                 <td className={fontWeight}>{rate.toFixed(3)}p</td>
             </tr>
 }
@@ -79,18 +80,18 @@ export function AgileRateCard(props){
         if (agileRatesInit.length < 1){ return ''}
         
         //setting the min rate time
-        var todaysMinRateTime = new Date(todaysMin[0])
-        var tmrsMinRateTime = new Date(tmrsMin[0])
+        var todaysMinRateTime = moment(todaysMin[0])
+        var tmrsMinRateTime = moment(tmrsMin[0])
 
-        var timeNow = new Date()
+        var timeNow = moment()
         var currentRate = 9999, validFrom, nextTwoRates = [9999, 9999]
         for (var i = 0; i < agileRatesInit.length; i++){
-            var startTime = new Date(agileRatesInit[i].valid_from)
-            var endTime = new Date(agileRatesInit[i].valid_to)
+            var startTime = moment(agileRatesInit[i].valid_from)
+            var endTime = moment(agileRatesInit[i].valid_to)
             //getting the current rate
-            if (startTime < timeNow && timeNow < endTime){
+            if (timeNow.isBetween(startTime, endTime)){
                 currentRate = agileRatesInit[i].rate
-                validFrom = new Date(agileRatesInit[i].valid_from)
+                var currentValidFrom = moment(agileRatesInit[i].valid_from)
                 //storing the next two rates
                 if (i < agileRatesInit.length - 1){
                     nextTwoRates[0] = agileRatesInit[i+1].rate
@@ -102,18 +103,18 @@ export function AgileRateCard(props){
 
             //getting today's and tmr's min rates
             var todaysMinRate, tmrsMinRate
-            if (startTime.getTime() === todaysMinRateTime.getTime()){
+            if (startTime.isSame(todaysMinRateTime, 'm')){
                 todaysMinRate = agileRatesInit[i].rate
-            } else if (startTime.getTime() === tmrsMinRateTime.getTime()){
+            } else if (startTime.isSame(tmrsMinRateTime, 'm')){
                 tmrsMinRate = agileRatesInit[i].rate
             }
         }
 
-        let timeOptions = {'hour':'numeric', 'minute': 'numeric'}
-        const convertToDate = (value) => {
-            const time = new Date(value)
-            return time.toLocaleTimeString('en-gb', timeOptions)
-        }
+        // let timeOptions = {'hour':'numeric', 'minute': 'numeric'}
+        // const convertToDate = (value) => {
+        //     const time = new Date(value)
+        //     return time.toLocaleTimeString('en-gb', timeOptions)
+        // }
 
         return ( type === 'homepage' ?
         (<div>
@@ -122,13 +123,13 @@ export function AgileRateCard(props){
                     <h4 className="display-6">Current</h4>
                     <h5 className="lead">{currentRate.toFixed(3)}p</h5>
                     <span style={{fontSize:"95%"}}>
-                        since {validFrom.toLocaleTimeString('en-gb', timeOptions)}</span>
+                        since {currentValidFrom.format("HH:mm")}</span>
                 </div>
                 <div className='col-6'>
                     <h4 className="display-6">Today's Lowest</h4>
                     <h5 className="lead">{todaysMinRate ? todaysMinRate.toFixed(3): ''}p</h5>
                     <span style={{fontSize:"95%"}}>
-                        at {todaysMin.map(convertToDate).join()}</span>
+                        at {todaysMin.map((val) => {return moment(val).format("HH:mm")}).join()}</span>
                 </div>
             </div>
             <hr className="alert-dark my-4"></hr>
@@ -141,7 +142,7 @@ export function AgileRateCard(props){
                 {tmrsMinRate && <div className='col-6'>
                     <h4 className="display-6">Tomorrow's Lowest</h4>
                     <h5 className="lead">{tmrsMinRate.toFixed(3)}p</h5>
-                    <span style={{fontSize:"95%"}}>at {tmrsMin.map(convertToDate).join()}</span>
+                    <span style={{fontSize:"95%"}}>at {tmrsMin.map((val) => {return moment(val).format("HH:mm")}).join()}</span>
                 </div>}
             </div>
         </div>) : (
@@ -151,7 +152,7 @@ export function AgileRateCard(props){
                     <div className="card-body">
                         <h5 className="card-title mb-3">Current Rate</h5>
                         <h3 className="font-weight-bold mb-3">{currentRate.toFixed(3)}p</h3>
-                        <h5>since {validFrom.toLocaleTimeString('en-gb', timeOptions)}</h5>
+                        <h5>since {currentValidFrom.format("HH:mm")}</h5>
                     </div>
                 </div>
             </div>
@@ -160,7 +161,7 @@ export function AgileRateCard(props){
                     <div className="card-body">
                         <h5 className="card-titl mb-3">Today's Lowest</h5>
                         <h3 className="font-weight-bold mb-3">{todaysMinRate ? todaysMinRate.toFixed(3) : ''}p</h3>
-                        <h5>at {todaysMin.map(convertToDate).join()}</h5>
+                        <h5>at {todaysMin.map((val) => {return moment(val).format("HH:mm")}).join()}</h5>
                     </div>
                 </div>
             </div>
@@ -169,7 +170,7 @@ export function AgileRateCard(props){
                     <div className="card-body">
                         <h5 className="card-title mb-3">Tomorrow's Lowest</h5>
                         <h3 className="font-weight-bold mb-3">{tmrsMinRate ? tmrsMinRate.toFixed(3) : ''}{tmrsMinRate && `p`}</h3>
-                        {tmrsMinRate && <h5>at {tmrsMin.map(convertToDate).join()}</h5>}
+                        {tmrsMinRate && <h5>at {tmrsMin.map((val) => {return moment(val).format("HH:mm")}).join()}</h5>}
                     </div>
                 </div>
             </div>
