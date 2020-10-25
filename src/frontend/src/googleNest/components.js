@@ -6,7 +6,7 @@ export function NestCard(props){
     const [ambientTemp, setAmbientTemp] = useState([])
     const [thermostatTemp, setThermostatTemp] = useState([])
 
-    const {type} = props
+    // const {type} = props
 
     useEffect(() => {
         const myCallback = (response, status) =>{

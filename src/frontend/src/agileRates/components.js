@@ -11,8 +11,6 @@ export function AgileRateRow(props){
     const rate = agileRate.rate
     const timeNow = moment()
 
-    let dateOptions = {'weekday': 'short', 'day':'numeric', 'month': 'short'}
-    let timeOptions = {'hour':'numeric', 'minute': 'numeric'}
     var rowColour, fontWeight
     if (todaysMin.indexOf(agileRate.valid_from) > -1){
         rowColour = 'info'
@@ -84,7 +82,7 @@ export function AgileRateCard(props){
         var tmrsMinRateTime = moment(tmrsMin[0])
 
         var timeNow = moment()
-        var currentRate = 9999, validFrom, nextTwoRates = [9999, 9999]
+        var currentRate = 9999, nextTwoRates = [9999, 9999]
         for (var i = 0; i < agileRatesInit.length; i++){
             var startTime = moment(agileRatesInit[i].valid_from)
             var endTime = moment(agileRatesInit[i].valid_to)
