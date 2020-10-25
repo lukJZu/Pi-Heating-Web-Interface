@@ -1,16 +1,17 @@
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
-  <a class="navbar-brand" href="/">Pi-Heating</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav">
-      <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
-      <a class="nav-item nav-link" href="/agile_rates/">Agile Rates</a>
-      <a class="nav-item nav-link" href="/history/">Boiler History</a>
-      <a class="nav-item nav-link" href="/consumption-history/">Energy History</a>
-      <!-- <a class="nav-item nav-link" href="#">History</a>-->
-      <!--<a class="nav-item nav-link disabled" href="" tabindex="-1" aria-disabled="true">Disabled</a>-->
+  {% comment %} <div class="container"> {% endcomment %}
+    <a class="navbar-brand">Pi-Heating</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-item nav-link" href="/agile_rates/">Agile Rates</a>
+          <a class="nav-item nav-link" href="/history/">Boiler History</a>
+          <a class="nav-item nav-link" href="/consumption-history/">Energy History</a>
+        <!--<a class="nav-item nav-link disabled" href="" tabindex="-1" aria-disabled="true">Disabled</a>-->
+        </div>
     </div>
-  </div>
+  {% comment %} </div> {% endcomment %}
 </nav>

@@ -319,15 +319,15 @@ export default class Consumption extends Component{
                 <LeccyUseChart data={this.state.dataPlot} />
             </div>
             <div className="row justify-content-center my-3">
-                <div class="col-3">
+                <div className="col-lg-3 my-1" align="center">
                     <ChartButtonGroup btnType={'type'} stateVar={this.chartType} 
                                         onValueChange={this.chartOptionChanged}/>
                 </div>
-                <div class="col-3">
+                <div className="col-lg-5 my-1" align="center">
                     <ChartButtonGroup btnType={'view'} stateVar={this.chartView} 
                                         onValueChange={this.chartOptionChanged}/>
                 </div>
-                <div class="col-4">
+                <div className="col-lg-4 my-1" align="center">
                     <RangePicker size="large" 
                                     defaultValue={this.state.dateRange}
                                     onChange={this.datesChanged}
