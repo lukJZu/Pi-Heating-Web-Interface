@@ -1,4 +1,4 @@
-import React, {useEffect, useState, Component} from 'react'
+import React, {useEffect, useState } from 'react'
 import moment from 'moment';
 
 import {APILookup} from '../lookup'
@@ -36,7 +36,7 @@ export function BoilerStateList(prop){
         }
       }
       APILookup('GET', `boilerStates/${limit}`, myCallback, limit)
-    }, [])
+    })
       
 
       return boilerStatesInit.map((boilerState, index)=>{

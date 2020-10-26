@@ -37,3 +37,8 @@ div[class*='tooltip-value-y'] {
     color: #8884d8;
     font-size: 90%;
 }
+
+.tooltip-average-cost {
+    color: #7ccabd;
+    font-size: 90%;
+}

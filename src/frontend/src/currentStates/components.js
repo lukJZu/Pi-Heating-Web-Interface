@@ -95,22 +95,5 @@ export function populateCurrentStates(response, status){
                                         operationState={response.operation[1]} 
                                         boostState={false} 
                                         cat={"heating"}/>, 
-                        document.getElementById("heating-states-block"));
-    
-    // useEffect(() => {
-    //   const myCallback = (response, status) =>{
-    //     if (status === 200) {
-    //       setBoilerBlock()
-    //       // setBoilerStatesInit(response)
-    //     } else {
-    //       alert("There was an error")
-    //     }
-    //     const spinnerEl = document.getElementById('current-states-spinner')
-    //     if (spinnerEl){
-    //       spinnerEl.innerHTML = ""
-    //     }
-    //   }
-    //   getCurrentStates(myCallback)
-    //   }, [])
-      
+                        document.getElementById("heating-states-block"));      
   }

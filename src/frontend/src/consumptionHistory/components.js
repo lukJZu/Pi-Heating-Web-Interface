@@ -1,72 +1,14 @@
-import React, {useEffect, useState, Component} from 'react'
-import { ResponsiveContainer, Bar, Line, 
-        CartesianGrid, XAxis, YAxis, ComposedChart, 
-        Legend, Tooltip, ReferenceLine } from 'recharts';
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
-import ToggleButton from 'react-bootstrap/ToggleButton';
+import React, { Component } from 'react'
 import Button from 'react-bootstrap/Button';
 import moment from 'moment';
 import * as d3 from 'd3-array';
 
-// import { DateRangePicker } from 'rsuite';
-
 import { APILookup } from '../lookup'
-import { DatePicker, Space } from 'antd';
-
-const { RangePicker } = DatePicker;
-
-const chartPlotOptions = {
-    'consumption': {"key":"consumption", 'label': 'Consumption', "unit":"kWh"},
-    "cost": {"key":"cost", 'label': 'Cost', "unit":"p"},
-    "rate": {"key":"rate", 'label': 'Rate', "unit":"p"}
-}
-
-const chartTypeOptions = {
-    'avg': {'label': 'Average'},
-    "actl": { 'label': 'Actual'}
-}
-
-const chartViewOptions = {
-    "hour": {'label': 'Hourly', 'avgStringFormat': "HH:mm", 'actlStringFormat': "DD MMM HH:mm"},
-    "day": {'label': 'Daily', "avgStringFormat": "dddd", 'actlStringFormat': "YYYY-MM-DD"},
-    "week": {'label': 'Weekly', "avgStringFormat": "WW YYYY", 'actlStringFormat': "WW YYYY"},
-    "month": {'label': 'Monthly', "avgStringFormat": "MMMM", 'actlStringFormat': "MMM YYYY"}
-}
+import { LeccyUseChart, LeccyUseTable, 
+            ChartButtonGroup, CustomDateRangePicker } from './sub-components'
+import { chartPlotOptions, chartViewOptions } from './index'
 
 
-function ChartButtonGroup(props) {
-    const {btnType, stateVar, onValueChange} = props
-    
-    var btnOptions
-    if (btnType === 'type'){
-        btnOptions = chartTypeOptions
-    } else if (btnType === 'view'){
-        btnOptions = chartViewOptions
-    } else if (btnType === 'plot'){
-        var options = {}
-        for (var [key, value] of Object.entries(chartPlotOptions)){
-            if (key !== 'rate'){
-                options[key] = value
-            }
-        }
-        btnOptions = options
-    }
-
-    const handleChange = (val, event) => {
-        const source = event.target;
-        //defocus the button
-        source.blur()
-        //callback to parent component as the state is changed
-        onValueChange([btnType, val])
-    };
-
-    return (
-      <ToggleButtonGroup type="radio" name="options" defaultValue={stateVar} onChange={handleChange}>
-          {Object.keys(btnOptions).map((key)=>{
-            return <ToggleButton value={key}>{btnOptions[key].label}</ToggleButton>})}
-      </ToggleButtonGroup>
-    );
-  }
 
 
 function getActlDateRangeArray(startEndArray, viewRange){
@@ -79,32 +21,31 @@ function getActlDateRangeArray(startEndArray, viewRange){
     return times
 }
 
-
-
 export default class Consumption extends Component{
 
     constructor(props){
         super(props);
         //getting the locally stored date range
         var dateRange = localStorage.getItem('consumptionPage/dateRange')
-        dateRange = dateRange ? dateRange.split(',').map(val=>moment(val, "L")) : [moment(), moment()]
-        
+        var chartType = localStorage.getItem('consumptionPage/chartType')
+        var chartView = localStorage.getItem('consumptionPage/chartView')
         var chartPlot = localStorage.getItem('consumptionPage/chartPlot')
+
         this.state={
             useBlocks:[],
             dataPlot:[],
-            dateRange: dateRange,
+            // chartView: chartView ? chartView : 'hour',
+            // chartType: chartType ? chartType : 'avg',
+            //converting from string back to array of moments
+            dateRange: dateRange 
+                        ? dateRange.split(',').map(val=>moment(val, "L")) 
+                        : [moment(), moment()],
             chartBarPlot: chartPlot ? chartPlot : 'cost',
             datesLimit: [moment(), moment()]
         }
         //getting the locally stored chart type and view
-        var chartView = localStorage.getItem('consumptionPage/chartView')
         this.chartView = chartView ? chartView : 'hour'
-        var chartType = localStorage.getItem('consumptionPage/chartType')
         this.chartType = chartType ? chartType : 'avg'
-        
-        //set limits to disable the range on date picker
-        this.datesLimit = [moment(), moment()]
 
         //create ref to the daterangepicker
         this.dateRangeElement = React.createRef();
@@ -115,7 +56,7 @@ export default class Consumption extends Component{
     chartOptionChanged = (stateArr) => {
         //assigning selection to class variable
         if (stateArr[0] === 'type'){
-            this.chartType = stateArr[1] 
+            this.chartType = stateArr[1]
             localStorage.setItem('consumptionPage/chartType', stateArr[1]);
             this.processAnyViewTypeChange()
         } else if (stateArr[0] === 'view'){
@@ -155,6 +96,7 @@ export default class Consumption extends Component{
         this.dateRangeElement.current.datesChanged(newDateRange)
     }
 
+    //for when the dates in date range picker is changed, manually or using pre-set buttons
     datesChanged = (value) => {
         if (value){
             // this.dateRange = value
@@ -184,14 +126,17 @@ export default class Consumption extends Component{
         
         var data = xArray.map((time) => {return {x:time}})
 
-        // console.time('someFunction')
         if (this.chartType === 'avg'){
             data = this.processAvgView(data)
         } else {
             data = this.processActlView(data)
         }
 
-        // console.timeEnd('someFunction')
+        //calculating the average cost per unit
+        for (var dataPoint of data){
+            dataPoint.avgRate = dataPoint.consumption !== 0 ? dataPoint.cost/dataPoint.consumption : null
+        }
+
         //assigning the data back to plot
         this.setState({dataPlot:data})
     }
@@ -218,7 +163,7 @@ export default class Consumption extends Component{
                 }
             })
         }
-        else if (this.chartView === 'day' || 'week' || 'month'){
+        else { //for this.chartView === day/week/month 
             //group the useblocks into dates
             var grouped = d3.groups(this.state.useBlocks, d => d.time.format("LL"))
             //turn the grouped array into sum of each day
@@ -273,8 +218,9 @@ export default class Consumption extends Component{
                                             })
             data.reverse()
         }
-        else if (this.chartView === 'day' || 'week' || 'month'){
+        else { //for this.chartView === day/week/month 
             const dateFormat = chartViewOptions[this.chartView]['actlStringFormat']
+
             //group the useblocks into dates
             var grouped = d3.groups(this.state.useBlocks, d => d.time.format(dateFormat))
             //turn the grouped array into sum of each day
@@ -295,6 +241,7 @@ export default class Consumption extends Component{
                 var filteredDates = d3.filter(grouped, obj => obj.x === dataBlock.x)
                 //storing different names for week view
                 if (this.chartView === 'week'){
+                    //use locale week format (week starts on user chosen day)
                     dataBlock.x = `${moment(dataBlock.x, dateFormat).startOf('week').format("DD")
                                     }-${moment(dataBlock.x, dateFormat).endOf('week').format("DD MMM YYYY")}`
                 }
@@ -307,9 +254,8 @@ export default class Consumption extends Component{
         return data
     }
 
-
+    //callback for when the use history has been loaded
     componentDidMount(){
-        //callback for when the use history has been loaded
         const myCallback = (response, status) =>{
             if (status === 200) {
                 var leccyUse = response.leccyUse
@@ -336,19 +282,19 @@ export default class Consumption extends Component{
                 <div className="col-6">
                     <Button className="btn btn-primary btn-arrow-left" id="prev-date-range"
                             onClick={this.prevNextClicked}>
-                        Previous
-                    </Button>
+                        Previous</Button>
                 </div>
                 <div className="col-6" align="right">
                     <Button className="btn btn-primary btn-arrow-right" id="next-date-range"
                             onClick={this.prevNextClicked}>
-                        Next
-                    </Button>
+                        Next</Button>
                 </div>
             </div>
             <div className="row mb-3">
                 <LeccyUseChart data={this.state.dataPlot} 
-                                barPlotOptions={chartPlotOptions[this.state.chartBarPlot]}/>
+                                barPlotOptions={chartPlotOptions[this.state.chartBarPlot]}
+                                // chartType={this.chartType}
+                                chartView={this.chartView}/>
             </div>
             <div className="row justify-content-center my-3">
                 <div className="col-lg-2 col-md-4 my-1" align="center">
@@ -370,7 +316,9 @@ export default class Consumption extends Component{
                                             datesChanged={this.datesChanged}/>
                 </div>
             </div>
-            <LeccyUseTable dataPlots={this.state.dataPlot}/>
+            <LeccyUseTable dataPlots={this.state.dataPlot} 
+                            chartType={this.chartType}
+                            chartView={this.chartView}/>
         </div>) :(
             <div className="text-center">
                 <div className="spinner-border" role="status">
@@ -382,153 +330,3 @@ export default class Consumption extends Component{
 
 }
 
-class CustomDateRangePicker extends Component {
-
-    constructor(props){
-        super(props);
-        this.state = {
-            dateRange: props.dateRange,
-            preSelection: null
-        }
-    }
-
-    //actions for when the dates are manually changed using the picker
-    datesChanged = (range) =>{
-        this.setState({dateRange:range, preSelection: null})
-    }
-
-    //actions for when the date range buttons were clicked
-    buttonDateRangeClicked = (value) =>{
-        var dateRange
-        if (value === 'week'){
-            //making sure the lower date is not before the dates limit
-            dateRange = [moment.max(moment().subtract(8, 'd'), this.props.datesLimit[0]), 
-                            moment().subtract(1, 'd')]
-        } else if (value === 'month'){
-            dateRange = [moment.max(moment().subtract({'months':1, 'days':1}), this.props.datesLimit[0]), 
-                            moment().subtract(1, 'd')]
-        } else if (value === 'all'){
-            dateRange = this.props.datesLimit
-        } 
-        
-        this.setState({dateRange: dateRange, preSelection: value})
-    }
-
-    //update the parent component if any dates change
-    componentDidUpdate(prevProps, prevStates) {
-        if (prevStates.dateRange !== this.state.dateRange){
-            this.props.datesChanged(this.state.dateRange)
-        }
-    }
-
-    render(){ 
-        return (
-        <div className="row align-items-center">
-            <div className="col-6" align="right">
-                <ToggleButtonGroup type="radio" name="options" value={this.state.preSelection} 
-                                    onChange={this.buttonDateRangeClicked}>
-                <ToggleButton value={"all"}>All Time</ToggleButton>
-                <ToggleButton value={"month"}>Past Month</ToggleButton>
-                <ToggleButton value={"week"}>Past Week</ToggleButton>
-                </ToggleButtonGroup>
-            </div>
-            <div className="col-6 " align="left">
-            <RangePicker 
-                size="large" 
-                value={this.state.dateRange}
-                onChange={this.datesChanged}
-                disabledDate={(current) => {
-                    return current && 
-                        !current.isBetween(this.props.datesLimit[0], this.props.datesLimit[1], '[]')}}
-            />
-            </div>
-        </div>)
-    }
-}
-
-function LeccyUseChart(prop){
-    
-    const {data, barPlotOptions} = prop
-    
-    const chart = ( data ?
-    <ResponsiveContainer width="100%" height={500}>
-        <ComposedChart data={data}>
-            <CartesianGrid stroke="#ccc" />
-            <XAxis dataKey="x" />
-            <YAxis yAxisId="left" type="number" dataKey={barPlotOptions.key} 
-                            name={barPlotOptions.label} unit={barPlotOptions.unit} />
-            <YAxis yAxisId="rate" orientation="right" type="number" dataKey="rate" name="Rate" unit="p" />
-            <ReferenceLine y={0} yAxisId="rate" stroke="#8884d8" strokeWidth={1.25}/>
-            <Bar yAxisId="left" fill="#000000" dataKey={barPlotOptions.key} stroke="#8884d8" />
-            <ReferenceLine y={0} yAxisId="left" stroke="white" strokeWidth={1.25}/>
-            <Line yAxisId="rate" type="monotone" dataKey="rate" stroke="#8884d8" />
-            <Legend />
-            <Tooltip content={<CustomTooltip />}/>
-        </ComposedChart >
-    </ResponsiveContainer>
-    : "");
-    
-    return chart
-}
-
-//custom tooltip content
-function CustomTooltip ({ active, payload, label }) {
-    if (active && label && payload) {
-        return (
-        <div className="custom-tooltip">
-            <p className="tooltip-value-x">{`${label}`} </p>
-            { payload.some(e => e.dataKey !== 'rate')  && 
-                <div className="tooltip-value-y1"><p>
-                {`${chartPlotOptions[payload.find(e => e.dataKey !=='rate').dataKey].label}: `} 
-                {payload.find(e => e.dataKey !=='rate').value.toFixed(3)}{chartPlotOptions[payload.find(e => e.dataKey !=='rate').dataKey].unit}</p></div>}
-            { payload.some(e => e.dataKey === 'rate') &&
-                <div className="tooltip-value-y2"><p>
-                {`${chartPlotOptions['rate'].label}: `}
-                {payload.find(e => e.dataKey ==='rate').value.toFixed(3)}{chartPlotOptions['rate'].unit}</p></div>}
-        </div>
-        );
-    } else {return ""}
-}
-
-function LeccyUseRow(props){
-    const {dataPlot} = props
-    
-    return ( dataPlot.rate ? (<tr>
-              <td>{dataPlot.x}</td>
-              {/* <td>{endTime.toLocaleDateString('en-gb', dateOptions)} {endTime.toLocaleTimeString('en-gb', timeOptions)}</td> */}
-              <td>{dataPlot.rate && `${dataPlot.rate.toFixed(3)}p`}</td>
-              <td>{dataPlot.consumption && dataPlot.consumption.toFixed(3)}</td>
-              <td>{dataPlot.cost !== 0 && `${(dataPlot.consumption * dataPlot.rate).toFixed(2)}p`}</td>
-            </tr>) : "" )
-}
-
-
-function LeccyUseTable(props){
-    const { dataPlots } = props
-    
-    return ( dataPlots ?
-    <div className="row justify-content-center">
-        <div className="col-12">
-            <div className="card">
-                <div className="card-body">
-                <table className="table table-striped" style={{"width":"100%"}}>
-                    <thead className="thead-dark">
-                        <tr>
-                            <th>Time</th>
-                            <th>Rate</th>
-                            <th>Units Used (kWh)</th>
-                            <th>Cost</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {dataPlots.map((dataPlot, index)=>{
-                        return <LeccyUseRow dataPlot={dataPlot} key={`${index}`}/>
-                    })}
-                    </tbody>
-                </table> 
-                </div>
-            </div>
-        </div>
-    </div> : ""
-    )
-  }
