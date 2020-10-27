@@ -36,7 +36,7 @@ export function BoilerStateList(prop){
         }
       }
       APILookup('GET', `boilerStates/${limit}`, myCallback, limit)
-    })
+    }, [])
       
 
       return boilerStatesInit.map((boilerState, index)=>{

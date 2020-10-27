@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ResponsiveContainer, Bar, Line, 
+import { ResponsiveContainer, Bar, Line, Label,
         CartesianGrid, XAxis, YAxis, ComposedChart, 
         Legend, Tooltip, ReferenceLine } from 'recharts';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
@@ -25,7 +25,7 @@ export function ChartButtonGroup(props) {
     } else if (btnType === 'plot'){
         var options = {}
         for (var [key, value] of Object.entries(chartPlotOptions)){
-            if (key !== 'rate'){
+            if (key !== 'rate' && key !== 'avgCost'){
                 options[key] = value
             }
         }
@@ -128,17 +128,23 @@ export function LeccyUseChart(prop){
     const chart = ( data ?
     <ResponsiveContainer width="100%" height={500}>
         <ComposedChart data={data}>
-            <CartesianGrid stroke="#ccc" />
+            <CartesianGrid stroke="#aaaaaaaa"/>
             <XAxis dataKey="x" />
             <YAxis yAxisId="left" type="number" dataKey={barPlotOptions.key} 
                     name={barPlotOptions.label} unit={barPlotOptions.unit} />
             <YAxis yAxisId="rate" orientation="right" type="number" 
-                    dataKey="rate" name="Rate" unit="p" />
+                    name="Rate" unit="p" />
             <ReferenceLine y={0} yAxisId="rate" stroke="#8884d8" strokeWidth={1.25}/>
+            <ReferenceLine y={14.6} yAxisId="rate" stroke="#795ae090" strokeWidth={1}>
+                {/* <Label value="Normal Rate" position="right" fill="#e05a7750"/> */}
+            </ReferenceLine> 
             <Bar yAxisId="left" fill="#000000" name={barPlotOptions.label} 
                     dataKey={barPlotOptions.key} stroke="#8884d8" />
             <ReferenceLine y={0} yAxisId="left" stroke="white" strokeWidth={1}/>
-            <Line yAxisId="rate" type="monotone" name="Rate" dataKey="rate" stroke="#8884d8" />
+            <Line yAxisId="rate" type="monotone" name="Rate" dot={false}
+                    dataKey="rate" stroke="#555555" legendType="none" />
+            <Line yAxisId="rate" type="monotone" 
+                    name="Average Unit Cost" dataKey="avgCost" stroke="#8884d8" />
             <Legend />
             <Tooltip content={<CustomTooltip />}/>
         </ComposedChart >
@@ -152,18 +158,23 @@ export function LeccyUseChart(prop){
 function CustomTooltip ({ active, payload, label }) {
     if (active && label && payload) {
         //checking whether each of the info is found
+        const avgCostValueObj = payload.find(e => e.dataKey ==='avgCost')
+        const mainValueObj = payload.find(e => (e.dataKey !== 'avgCost') && (e.dataKey !== 'rate'))
         const rateValueObj = payload.find(e => e.dataKey ==='rate')
-        const mainValueObj = payload.find(e => e.dataKey !== 'rate')
         
         return (
         <div className="custom-tooltip">
-            <p className="tooltip-value-x">{`${label}`} </p>
+            <p className="tooltip-x-value">{`${label}`} </p>
             { mainValueObj  && 
-                <div className="tooltip-value-y1">
+                <div className="tooltip-value-y">
                     <p>{`${chartPlotOptions[mainValueObj.dataKey].label}: `} 
                         {mainValueObj.value.toFixed(3)}{chartPlotOptions[mainValueObj.dataKey].unit}</p></div>}
+            { avgCostValueObj &&
+                <div className="tooltip-value-avgCost">
+                    <p>{`${chartPlotOptions['avgCost'].label}: `}
+                        {avgCostValueObj.value.toFixed(3)}{chartPlotOptions['avgCost'].unit}</p></div>}
             { rateValueObj &&
-                <div className="tooltip-value-y2">
+                <div className="tooltip-value-rate">
                     <p>{`${chartPlotOptions['rate'].label}: `}
                         {rateValueObj.value.toFixed(3)}{chartPlotOptions['rate'].unit}</p></div>}
         </div>
@@ -189,7 +200,7 @@ function LeccyUseRow(props){
               <td>{dataPlot.rate && `${dataPlot.rate.toFixed(3)}p`}</td>
               <td>{dataPlot.consumption && dataPlot.consumption.toFixed(3)}</td>
               <td>{costCellString}</td>
-              <td>{dataPlot.avgRate && `${dataPlot.avgRate.toFixed(3)}p`}</td>
+              <td>{dataPlot.avgCost && `${dataPlot.avgCost.toFixed(3)}p`}</td>
             </tr>) : "" )
 }
 

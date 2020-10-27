@@ -5,7 +5,8 @@ export default Consumption
 export const chartPlotOptions = {
     'consumption': {"key":"consumption", 'label': 'Consumption', "unit":"kWh"},
     "cost": {"key":"cost", 'label': 'Cost', "unit":"p"},
-    "rate": {"key":"rate", 'label': 'Rate', "unit":"p"}
+    "rate": {"key":"rate", 'label': 'Rate', "unit":"p"},
+    "avgCost": {"key":"avgCost", 'label': 'Average Unit Cost', "unit":"p/kWh"}
 }
 
 export const chartTypeOptions = {

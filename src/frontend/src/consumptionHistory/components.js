@@ -134,7 +134,7 @@ export default class Consumption extends Component{
 
         //calculating the average cost per unit
         for (var dataPoint of data){
-            dataPoint.avgRate = dataPoint.consumption !== 0 ? dataPoint.cost/dataPoint.consumption : null
+            dataPoint.avgCost = dataPoint.consumption !== 0 ? dataPoint.cost/dataPoint.consumption : null
         }
 
         //assigning the data back to plot
