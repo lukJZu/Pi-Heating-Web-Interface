@@ -21,7 +21,7 @@ from django.views.generic import TemplateView
 
 from home.views import HomePage
 from home.currentStates import getJSONCurrentStates, setCurrentState
-from HotWaterBoost.views import stop_boost
+from home.boostAPIs import get_boost_states, set_boost_states
 from boilerHistory.views import HistoryPage, BoilerStateListCreate
 from agileRates.views import agile_rates_view_page, getJSONAgileRates
 from googleNest.views import GoogleNestPage#get_nest_view
@@ -32,7 +32,6 @@ urlpatterns = [
     # path('', include('boilerHistory.urls')),
     path('react/', TemplateView.as_view(template_name='react.html')),
     path('admin/', admin.site.urls),
-    path('stop_boost/', stop_boost),
     path('history/', HistoryPage.as_view()), 
     path('agile_rates/', agile_rates_view_page), 
     path('consumption-history/', ConsumptionPage.as_view()), 
@@ -47,6 +46,8 @@ urlpatterns += [
     path('api/currentStates/change', setCurrentState),
     path('api/agileRates/', getJSONAgileRates),
     path('api/googleNest/', GoogleNestPage.as_view()),
+    path('api/boost/', get_boost_states),
+    path('api/boost/set', set_boost_states),
 ]
 
 # if settings.DEBUG:

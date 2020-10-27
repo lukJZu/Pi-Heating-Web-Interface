@@ -31,8 +31,6 @@ def getJSONLeccyUse(request, *args, **kwargs):
 class ConsumptionPage(View):
 
     def get(self, request):
-
-
         context = {}
         context['title'] = "Electricity Use History"
         js_files = move_build_static()

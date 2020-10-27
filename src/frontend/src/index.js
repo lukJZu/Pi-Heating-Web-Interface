@@ -1,18 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import { BoilerStateList } from './boilerStates'
 import { AgileRateCard, AgileRateList } from './agileRates'
 import { populateCurrentStates } from './currentStates';
 import { APILookup } from './lookup'
 import { NestCard } from './googleNest'
 import Consumption from './consumptionHistory'
+import { BoostStatesCard } from './boostFunctions'
 import * as serviceWorker from './serviceWorker';
 
 const appEl = document.getElementById('root')
 if (appEl){
-  ReactDOM.render(<Consumption />, appEl);
+  ReactDOM.render(<BoostStatesCard />, appEl);
 }
 
 const boilerStateRows = document.getElementById('boilerStateRows')
@@ -54,6 +54,10 @@ if (consumptionTableEl){
     ReactDOM.render(<Consumption />, consumptionTableEl);
 }
 
+const boostStatesCard = document.getElementById('boost-states-card-content')
+if (boostStatesCard){
+    ReactDOM.render(<BoostStatesCard />, boostStatesCard);
+}
 
 // const chartEl = document.getElementById('consumption-page-chart')
 // if (chartEl){

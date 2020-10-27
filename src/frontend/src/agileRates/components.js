@@ -10,8 +10,9 @@ export function AgileRateRow(props){
     const endTime = moment(agileRate.valid_to)
     const rate = agileRate.rate
     const timeNow = moment()
+    // var Tag = type === 1 ? 'h3' : 'h4'
 
-    var rowColour, fontWeight
+    var rowColour = "", style
     if (todaysMin.indexOf(agileRate.valid_from) > -1){
         rowColour = 'info'
     } else if (tmrsMin.indexOf(agileRate.valid_from) > -1){
@@ -22,17 +23,22 @@ export function AgileRateRow(props){
         rowColour = 'success'
     } else if (timeNow.isAfter(endTime)){
         rowColour = 'secondary'
-    } else if (timeNow.isBetween(startTime, endTime)){
+    } 
+    else if (timeNow.isBetween(startTime, endTime)){
         rowColour = 'light'
-        fontWeight = 'font-weight-bold'
+    }
+
+    //setting font weight
+    if (timeNow.isBetween(startTime, endTime)){
+        style = {fontSize:'larger', fontWeight:'bold'}
     }
 
     return <tr className={`table-${rowColour}`}>
-                <td className={fontWeight}>
+                <td style={style}>
                   {startTime.format("ddd DD MMM HH:mm")}
                 </td>
-                <td className={fontWeight}>{endTime.format("ddd DD MMM HH:mm")}</td>
-                <td className={fontWeight}>{rate.toFixed(3)}p</td>
+                <td style={style}>{endTime.format("ddd DD MMM HH:mm")}</td>
+                <td style={style}>{rate.toFixed(3)}p</td>
             </tr>
 }
 
@@ -107,13 +113,7 @@ export function AgileRateCard(props){
                 tmrsMinRate = agileRatesInit[i].rate
             }
         }
-
-        // let timeOptions = {'hour':'numeric', 'minute': 'numeric'}
-        // const convertToDate = (value) => {
-        //     const time = new Date(value)
-        //     return time.toLocaleTimeString('en-gb', timeOptions)
-        // }
-
+        
         return ( type === 'homepage' ?
         (<div>
             <div className="row">
@@ -183,7 +183,6 @@ export function AgileRateCard(props){
                 setAgileRatesInit(response.rates)
                 setTodaysMin(response.todaysMin)
                 setTmrsMin(response.tmrsMin)
-                // populateCard()
             } else {
                 alert("There was an error")
             }

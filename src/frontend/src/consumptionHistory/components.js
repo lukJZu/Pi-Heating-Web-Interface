@@ -71,6 +71,7 @@ export default class Consumption extends Component{
 
     prevNextClicked = (event) => {
         var dateRange = this.state.dateRange
+        var newDateRange
         const btnID = event.target.id
         
         //add/subtract the hourly view by 1 day, same as daily view
@@ -78,14 +79,14 @@ export default class Consumption extends Component{
         
         if (btnID === "prev-date-range"){
             //subtract both start and end date by 1 period
-            var newDateRange = dateRange.map((date) => moment(date).subtract(1, addSubtractTime))
+            newDateRange = dateRange.map((date) => moment(date).subtract(1, addSubtractTime))
             //make sure new date range is not before date limit
             if (newDateRange[0].isBefore(this.state.datesLimit[0])){
                 var newMaxDate = moment.min(moment(this.state.datesLimit[0]).add({[addSubtractTime]:1}), this.state.datesLimit[1])
                 newDateRange = [this.state.datesLimit[0], newMaxDate]
             }
         } else {
-            var newDateRange = dateRange.map((date) => moment(date).add(1, addSubtractTime))
+            newDateRange = dateRange.map((date) => moment(date).add(1, addSubtractTime))
             //make sure new date range is not after date limit
             if (newDateRange[1].isAfter(this.state.datesLimit[1])){
                 var newMinDate = moment.max(moment(this.state.datesLimit[1]).subtract({[addSubtractTime]:1}), this.state.datesLimit[0])

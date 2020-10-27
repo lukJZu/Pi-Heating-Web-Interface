@@ -1,11 +1,16 @@
-{% if not state %}
 
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/react-bootstrap-range-slider.css' %}">
 
 <div class="col-md-6 col-sm-12 col-xxl-3 col-lg-4 mb-3">
     <div class = 'card' >
         <div class='card-body'>
-            <div class="input-group mb-3">
-                <form method = 'POST' action='.'> {% csrf_token %}
+            <h4 class="card-title mb-3">
+                Boost
+            </h4>
+            <div class="content" id='boost-states-card-content'>
+            {% comment %} <div class="input-group mb-3"> {% endcomment %}
+                {% comment %} <form method = 'POST' action='.'> {% csrf_token %}
                     <div class = 'input-group-prepend'>
                         <label class="input-group-integer" for="boostMinutes"><h4>Boost Hot Water</h4></label>
                     </div>
@@ -43,16 +48,22 @@
                         // Sorta magic numbers based on size of the native UI thumb
                         //bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
                     }
-                </script>
+                </script> {% endcomment %}
 
+            {% comment %} </div> {% endcomment %}
+            </div>
+            <div class="text-center" id='boost-states-card-spinner'>
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
             </div>
         </div>
+        
     </div>
 </div>
 
-{% else %}
 
-{% load tz %}
+{% comment %} {% load tz %}
 <div class="col-md-6 col-sm-12 col-xl-3 col-lg-4 mb-3">
     <div class = 'card'>
         <div class='card-body'>
@@ -66,7 +77,5 @@
             </div>
         </div>
     </div>
-</div>
+</div> {% endcomment %}
 
-
-{% endif %}

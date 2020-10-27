@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ResponsiveContainer, Bar, Line, Label,
+import { ResponsiveContainer, Bar, Line, 
         CartesianGrid, XAxis, YAxis, ComposedChart, 
         Legend, Tooltip, ReferenceLine } from 'recharts';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
@@ -123,7 +123,7 @@ export class CustomDateRangePicker extends Component {
 
 export function LeccyUseChart(prop){
     
-    const {data, barPlotOptions, chartType, chartView } = prop
+    const {data, barPlotOptions, chartView } = prop
     
     const chart = ( data ?
     <ResponsiveContainer width="100%" height={500}>

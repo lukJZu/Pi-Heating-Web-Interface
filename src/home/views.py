@@ -13,16 +13,12 @@ from django.utils.decorators import method_decorator
 # from django.contrib.admin.views.decorators import staff_member_required
 
 from home.constants import homePath
-from HotWaterBoost.views import BoostView
 
 
 # @method_decorator(staff_member_required, name = 'get')
 class HomePage(View):
-    boostView = BoostView()
 
     def get(self, request):
-        boostRendered = self.boostView.get(request)
-        # agileRatesRendered = agileRatesView().get(request, count = 3)
         #checking for new states to be updated into the DB
         updateHistoryDB()
 
@@ -36,7 +32,7 @@ class HomePage(View):
         title = "Pi-Heating Dashboard"
         context = {"title":title,
                     "hotWaterSchedule": schedule,
-                    "boostRendered":boostRendered,
+                    # "boostRendered":boostRendered,
                     # "agileRatesRendered": agileRatesRendered,
                     "js_files":js_files}
 
