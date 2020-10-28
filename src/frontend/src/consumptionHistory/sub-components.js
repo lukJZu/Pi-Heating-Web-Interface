@@ -4,11 +4,9 @@ import { ResponsiveContainer, Bar, Line,
         Legend, Tooltip, ReferenceLine } from 'recharts';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
-import Button from 'react-bootstrap/Button';
 import moment from 'moment';
 
 import { chartPlotOptions, chartTypeOptions, chartViewOptions} from './index'
-
 
 import { DatePicker } from 'antd';
 const { RangePicker } = DatePicker;
@@ -208,6 +206,7 @@ function LeccyUseRow(props){
 export function LeccyUseTable(props){
     const { dataPlots, chartType, chartView } = props
     
+    //setting the table headers depending on the chart view and type
     var rateHeader = 'Rate', unitHeader = 'Used (kWh)'
     var costHeader = 'Cost'
     if (chartType === 'avg' && chartView !== 'hour') {
@@ -224,6 +223,21 @@ export function LeccyUseTable(props){
         costHeader = 'Mean Cost'
     }
 
+    //calculating the total
+    var totalUse = 0, totalCost = 0
+    for (var dataPlot of dataPlots){
+        totalUse += dataPlot.consumption ? dataPlot.consumption : 0
+        totalCost += dataPlot.cost ? dataPlot.cost : 0
+    }
+    var totalRow = (
+        <tr className="table-secondary font-weight-bold" style={{fontSize:"135%"}}>
+            <td className="text-center" colSpan={2}>Sum of all time periods</td>
+            <td>Total Use: {totalUse.toFixed(3)}kWh</td>
+            <td>Total Cost: £{(totalCost/100).toFixed(2)}</td>
+            <td>Average Unit Cost: {(totalCost/totalUse).toFixed(3)}p</td>
+        </tr>
+    )
+
     return ( dataPlots ?
     <div className="row justify-content-center">
         <div className="col-12">
@@ -231,21 +245,21 @@ export function LeccyUseTable(props){
                 <div className="card-body table-responsive-sm">
                 <table className="table table-striped" 
                         style={{"width":"100%", tableLayout:'fixed'}}>
-                    <thead className="thead-dark">
-                        <tr>
+                        {totalRow}
+                        <tr className="table-secondary font-weight-bold" style={{fontSize:"110%"}}>
                             <th>Period</th>
                             <th>{rateHeader}</th>
                             <th>{unitHeader}</th>
                             <th>{costHeader}</th>
                             <th>Average Unit Cost (per kWh)</th>
                         </tr>
-                    </thead>
                     <tbody>
-                    {dataPlots.map((dataPlot, index)=>{
-                        return <LeccyUseRow dataPlot={dataPlot}
-                                            chartView = {chartView}
-                                            key={`${index}`}/>
-                    })}
+                        {dataPlots.map((dataPlot, index)=>{
+                            return <LeccyUseRow dataPlot={dataPlot}
+                                                chartView = {chartView}
+                                                key={`${index}`}/>
+                            })
+                        }
                     </tbody>
                 </table> 
                 </div>

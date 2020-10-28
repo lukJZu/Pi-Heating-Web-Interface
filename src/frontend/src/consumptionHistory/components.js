@@ -6,9 +6,7 @@ import * as d3 from 'd3-array';
 import { APILookup } from '../lookup'
 import { LeccyUseChart, LeccyUseTable, 
             ChartButtonGroup, CustomDateRangePicker } from './sub-components'
-import { chartPlotOptions, chartViewOptions } from './index'
-
-
+import { chartPlotOptions, chartTypeOptions, chartViewOptions } from './index'
 
 
 function getActlDateRangeArray(startEndArray, viewRange){
@@ -34,8 +32,6 @@ export default class Consumption extends Component{
         this.state={
             useBlocks:[],
             dataPlot:[],
-            // chartView: chartView ? chartView : 'hour',
-            // chartType: chartType ? chartType : 'avg',
             //converting from string back to array of moments
             dateRange: dateRange 
                         ? dateRange.split(',').map(val=>moment(val, "L")) 
@@ -143,7 +139,13 @@ export default class Consumption extends Component{
     }
 
     processAvgView(data){
+        var filteredDateRange
         if (this.chartView === 'hour'){
+            //filter useBlocks to be within selected date range
+            filteredDateRange = d3.filter(this.state.useBlocks,
+                    (useBlock) => useBlock.time.isSameOrAfter(this.state.dateRange[0]) &&
+                                  useBlock.time.isBefore(this.state.dateRange[1].endOf('day')))
+
             //forming the array of time with 30min block
             var hours = []
             //generate the array of 30min block
@@ -151,12 +153,14 @@ export default class Consumption extends Component{
                 hours.push(moment({ hour }).format(chartViewOptions['hour']['avgStringFormat']));
                 hours.push(moment({ hour, minute: 30}).format(chartViewOptions['hour']['avgStringFormat']));
             }
+
             //group them into half hour block
-            var grouped3 = d3.group(this.state.useBlocks, d => d.time.format(
+            var grouped3 = d3.group(filteredDateRange, d => d.time.format(
                             chartViewOptions[this.chartView]['avgStringFormat']))
-            
+                            
             data = hours.map((blockTime) => {
                 var groupedArr = grouped3.get(blockTime)
+                if (!groupedArr){return {x:blockTime, rate:null, consumption:null, cost:null}}
                 return { x:blockTime, 
                     rate: d3.mean(groupedArr, v => v.rate),
                     consumption: d3.mean(groupedArr, val => val.consumption),
@@ -165,8 +169,13 @@ export default class Consumption extends Component{
             })
         }
         else { //for this.chartView === day/week/month 
+            //filter useBlocks to be within selected date range
+            filteredDateRange = d3.filter(this.state.useBlocks,
+                    (useBlock) => useBlock.time.isSameOrAfter(this.state.dateRange[0]) &&
+                                  useBlock.time.isBefore(this.state.dateRange[1].endOf(this.chartView)))
+
             //group the useblocks into dates
-            var grouped = d3.groups(this.state.useBlocks, d => d.time.format("LL"))
+            var grouped = d3.groups(filteredDateRange, d => d.time.format("L"))
             //turn the grouped array into sum of each day
             grouped = grouped.map(
                 (val) => { 
@@ -185,7 +194,7 @@ export default class Consumption extends Component{
             var dateFormat = chartViewOptions[this.chartView]['avgStringFormat']
             for (var dataBlock of data){
                 //filtering the dates which match the day of week/day in month
-                var filteredDates = d3.filter(grouped, obj => moment(obj.x, "LL").format(dateFormat) === dataBlock.x)
+                var filteredDates = d3.filter(grouped, obj => moment(obj.x, "L").format(dateFormat) === dataBlock.x)
                 //storing different names for week view
                 if (this.chartView === 'week'){
                     dataBlock.x = `${moment(dataBlock.x, dateFormat).startOf('week').format("DD")
@@ -205,7 +214,7 @@ export default class Consumption extends Component{
         if (this.chartView === 'hour'){
             //getting the range of dates to filter
             var startTime = moment(this.state.dateRange[0])
-            var endTime = moment(this.state.dateRange[1]).add(1, 'd')
+            var endTime = moment(this.state.dateRange[1]).set({'hour':0, 'minutes':0, 'seconds':0}).add(1, 'd')
             //set a 10 day limit to the view
             var dateLimit = moment(startTime).add(11, 'd')
             var filteredBlocks = d3.filter(this.state.useBlocks, 
@@ -277,24 +286,47 @@ export default class Consumption extends Component{
     }
     
     render(){
-        return ( this.state.useBlocks ?
+        //form the chart title
+        if (this.state.dataPlot.length > 0){
+            var chartTitle = `${chartTypeOptions[this.chartType].label} Usage `
+            const dateFormat = 'DD MMM YYYY'
+            if (this.state.dateRange[0].format("L") === this.state.dateRange[1].format("L")){
+                chartTitle += `on ${this.state.dateRange[0].format(dateFormat)}`
+            } else {
+                if (this.chartType === 'actl' && this.chartView === 'hour'){
+                    var endDateString = moment(this.state.dataPlot[this.state.dataPlot.length - 1].x, 
+                        chartViewOptions['hour']['actlStringFormat']).format(dateFormat)
+                    chartTitle += 
+                            `from ${this.state.dateRange[0].format(dateFormat)} to 
+                                ${endDateString}`
+                } else {
+                    chartTitle += 
+                            `from ${this.state.dateRange[0].format(dateFormat)} to 
+                                ${this.state.dateRange[1].format(dateFormat)}`
+                }
+            }
+        }
+
+        return ( this.state.dataPlot.length > 0 ?
         (<div>
             <div className="row my-3 mx-4">
-                <div className="col-6">
+                <div className="col-2">
                     <Button className="btn btn-primary btn-arrow-left" id="prev-date-range"
                             onClick={this.prevNextClicked}>
                         Previous</Button>
                 </div>
-                <div className="col-6" align="right">
+                <div className="col-8 text-center" align='center'>
+                    <h4 className="font-weight-bold">{chartTitle}</h4>
+                </div>
+                <div className="col-2" align="right">
                     <Button className="btn btn-primary btn-arrow-right" id="next-date-range"
                             onClick={this.prevNextClicked}>
                         Next</Button>
                 </div>
             </div>
             <div className="row mb-3">
-                <LeccyUseChart data={this.state.dataPlot} 
+                <LeccyUseChart data={this.state.dataPlot}
                                 barPlotOptions={chartPlotOptions[this.state.chartBarPlot]}
-                                // chartType={this.chartType}
                                 chartView={this.chartView}/>
             </div>
             <div className="row justify-content-center my-3">
@@ -328,6 +360,4 @@ export default class Consumption extends Component{
             </div>)
         )
     }
-
 }
-

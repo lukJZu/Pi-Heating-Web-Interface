@@ -142,51 +142,6 @@ export function BoostStatesCard(props){
     )
 }
 
-// class BoostButton extends Component {
-
-//     constructor(props){
-//         super(props)
-//         this.state = {
-//             hoverActive:false
-//         }
-//         this.buttonText = props.value ==='hotWater' ? "Hot Water" : "Heating"
-//         this.endTime = moment(props.boostState.endTime)
-//         this.count = 0
-//     }
-
-
-//     render(){
-//         this.count += 1
-//         console.log(this.count)
-//         return ( this.props.boostState.boost ?
-//             <Button size='lg' block variant="danger"
-//                     onClick={this.props.onClickCallback} 
-//                     value={this.props.value}
-//                     onMouseEnter={this.setState({hoverActive:true})}
-//                     onMouseLeave={this.setState({hoverActive:false})}>
-//                 {this.state.hoverActive ? 
-//                     <h4>Stop Boost</h4>
-//                     :
-//                     <div>
-//                     <h5 className="font-weight-bold alert-heading text-center pt-1">
-//                         {this.buttonText} 
-//                     </h5>
-//                     <hr className="alert-danger" />
-//                     <h5 className="text-center">
-//                         Boosting till {this.endTime.format("HH:mm")}<br/>
-//                         ({`${this.endTime.diff(moment(), 'm')}min${this.endTime.diff(moment(), 'm')>1?'s':''} remaining`})
-//                     </h5></div>
-//                 }
-//             </Button>
-//             : 
-//             <Button size='lg' block onClick={this.props.onClickCallback} value={this.props.value}>
-//                 Boost {this.buttonText}
-//             </Button>
-//         )
-        
-//     }
-
-// }
 
 function BoostButton(props){
     const {value, onClickCallback, boostState} = props

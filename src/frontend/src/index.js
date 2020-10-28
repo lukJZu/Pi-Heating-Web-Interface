@@ -10,9 +10,12 @@ import Consumption from './consumptionHistory'
 import { BoostStatesCard } from './boostFunctions'
 import * as serviceWorker from './serviceWorker';
 
+import "./main.css"
+import "./darkly.min.css"
+
 const appEl = document.getElementById('root')
 if (appEl){
-  ReactDOM.render(<BoostStatesCard />, appEl);
+  ReactDOM.render(<Consumption />, appEl);
 }
 
 const boilerStateRows = document.getElementById('boilerStateRows')
