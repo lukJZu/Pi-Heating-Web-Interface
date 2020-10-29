@@ -1,5 +1,6 @@
 import os, csv, sys, re, glob, shutil
-import iso8601
+# import iso8601
+from datetime import datetime
 from dateutil.tz import tzlocal 
 
 # import django.http
@@ -38,9 +39,9 @@ class HomePage(View):
 
         return render(request, "homepage/homepage.html", context)
 
-    def post(self, request):
-        self.boostView.post(request)
-        return redirect('/')
+    # def post(self, request):
+    #     self.boostView.post(request)
+    #     return redirect('/')
 
 def move_build_static():
     if not settings.DEBUG:
@@ -142,17 +143,17 @@ def condenseTimes(timeStates:list):
         if currentStates[-1]:
             #if previous boiler state is false then record the start time
             if not prevStates[-1]:
-                startTime = iso8601.parse_date(timeState[0])
+                startTime = datetime.fromisoformat(timeState[0])
             #if any of the previous state has since changed, record new entry
             elif currentStates != prevStates:
-                endTime = iso8601.parse_date(timeState[0])
+                endTime = datetime.fromisoformat(timeState[0])
                 condensedTimes.append((startTime, endTime, prevStates))            
                 startTime = endTime
         #if boiler is off
         elif not currentStates[-1]:
             #if boiler was on, then record new entry
             if prevStates[-1]:
-                endTime = iso8601.parse_date(timeState[0])
+                endTime = datetime.fromisoformat(timeState[0])
                 condensedTimes.append((startTime, endTime, prevStates))
         #store current states as previous
         prevStates = currentStates

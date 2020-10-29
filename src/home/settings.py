@@ -35,6 +35,7 @@ except ImportError:
 DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.1.42', 
+                '192.168.1.52', 
                  '127.0.0.1', 
                 'localhost'
                 ]
