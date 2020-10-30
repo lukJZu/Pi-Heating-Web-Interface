@@ -185,20 +185,19 @@ function LeccyUseRow(props){
     //setting the display of the cost depending on the chart view type
     //show in £ for week and month view
     var costCellString = ""
-    if (dataPlot.cost) {
-        if ( dataPlot.cost !==0 ){
-            costCellString = chartView === "hour" || chartView === "day" 
-                            ? `${dataPlot.cost.toFixed(2)}p`
-                            : `£${(dataPlot.cost/100).toFixed(2)}`
-        }
+    
+    if ( dataPlot.consumption != null ){
+        costCellString = chartView === "hour" || chartView === "day" 
+                        ? `${dataPlot.cost.toFixed(2)}p`
+                        : `£${(dataPlot.cost/100).toFixed(2)}`
     }
     
-    return ( dataPlot.rate ? (<tr>
+    return ( dataPlot.rate !== undefined && dataPlot.rate !== null ? (<tr>
               <td>{dataPlot.x}</td>
-              <td>{dataPlot.rate && `${dataPlot.rate.toFixed(3)}p`}</td>
-              <td>{dataPlot.consumption && dataPlot.consumption.toFixed(3)}</td>
+              <td>{`${dataPlot.rate.toFixed(3)}p`}</td>
+              <td>{dataPlot.consumption != null && dataPlot.consumption.toFixed(3)}</td>
               <td>{costCellString}</td>
-              <td>{dataPlot.avgCost && `${dataPlot.avgCost.toFixed(3)}p`}</td>
+              <td>{dataPlot.consumption != null && `${dataPlot.avgCost.toFixed(3)}p`}</td>
             </tr>) : "" )
 }
 
@@ -219,8 +218,6 @@ export function LeccyUseTable(props){
         costHeader = 'Mean Cost'
     } else if (chartType === 'actl' && chartView !== 'hour'){
         rateHeader = 'Mean Block Rate'
-        unitHeader = 'Mean Use (kWh)'
-        costHeader = 'Mean Cost'
     }
 
     //calculating the total
@@ -245,6 +242,7 @@ export function LeccyUseTable(props){
                 <div className="card-body table-responsive-sm">
                 <table className="table table-striped" 
                         style={{"width":"100%", tableLayout:'fixed'}}>
+                    <tbody>
                         {totalRow}
                         <tr className="table-secondary font-weight-bold" style={{fontSize:"110%"}}>
                             <th>Period</th>
@@ -253,10 +251,9 @@ export function LeccyUseTable(props){
                             <th>{costHeader}</th>
                             <th>Average Unit Cost (per kWh)</th>
                         </tr>
-                    <tbody>
                         {dataPlots.map((dataPlot, index)=>{
                             return <LeccyUseRow dataPlot={dataPlot}
-                                                chartView = {chartView}
+                                                chartView={chartView}
                                                 key={`${index}`}/>
                             })
                         }

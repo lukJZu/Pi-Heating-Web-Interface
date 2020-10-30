@@ -131,7 +131,7 @@ export default class Consumption extends Component{
 
         //calculating the average cost per unit
         for (var dataPoint of data){
-            dataPoint.avgCost = dataPoint.consumption !== 0 ? dataPoint.cost/dataPoint.consumption : null
+            dataPoint.avgCost = dataPoint.consumption >= 0 ? dataPoint.cost/dataPoint.consumption : null
         }
 
         //assigning the data back to plot
@@ -184,7 +184,7 @@ export default class Consumption extends Component{
                         //for rate, take the mean of each day
                         'rate': d3.mean(val[1], v => v.rate),
                         'use': d3.sum(val[1], v => v.consumption),
-                        'cost': d3.sum(val[1], v => v.consumption * v.rate),
+                        'cost': d3.sum(val[1], v => v.consumption >= 0 ? v.consumption * v.rate : null),
                         //store the count for the day so in the next step whether to calc mean or not
                         'count': d3.count(val[1], d => d.consumption)
                     }
@@ -221,11 +221,12 @@ export default class Consumption extends Component{
                             (val) => val.time.isBetween(
                                 startTime, endTime, 'minute', "[)") && val.time.isBefore(dateLimit))
             //turning the useBlocks into array of dicts for plotting
-            data = filteredBlocks.map((obj) => {return {x:obj.time.format("DD MMM HH:mm"),
-                                                        rate: obj.rate,
-                                                        consumption: obj.consumption,
-                                                        cost: obj.rate*obj.consumption}
-                                            })
+            data = filteredBlocks.map((obj) => {
+                return {x:obj.time.format("DD MMM HH:mm"),
+                        rate: obj.rate,
+                        consumption: obj.consumption,
+                        cost: obj.consumption >= 0 ? obj.rate*obj.consumption: null}
+                })
             data.reverse()
         }
         else { //for this.chartView === day/week/month 
@@ -241,7 +242,7 @@ export default class Consumption extends Component{
                         //for rate, take the mean of each day
                         'rate': d3.mean(val[1], v => v.rate),
                         'use': d3.sum(val[1], v => v.consumption),
-                        'cost': d3.sum(val[1], v => v.consumption * v.rate)
+                        'cost': d3.sum(val[1], v => v.consumption >= 0 ? v.consumption * v.rate : null)
                     }
                 } 
             )
