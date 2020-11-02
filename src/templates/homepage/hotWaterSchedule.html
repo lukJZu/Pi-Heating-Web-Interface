@@ -1,33 +1,12 @@
-{% load tz %}
-{% now "d H:i" as current_time %}
 <div class="col-md-6 col-sm-12 col-xxl-3 col-lg-4 mb-3">
     <div class="card">
         <div class="card-body">
             <h4 class="card-title mb-3">
                 Hot Water Schedule
             </h4>
-            <table class="table table-striped" style="width:100%">
-                <thead class="thead-dark">
-                <tr>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for a in hotWaterSchedule%}
-                {% if a.0|localtime|date:"d H:i" <= current_time and current_time < a.1|localtime|date:"d H:i" %}
-                    <tr class="table-danger">
-                {% else %}
-                    <tr>
-                {% endif %}
-                    {% with time=a.0|localtime %}
-                    <td>{{time|date:"Y-m-d H:i"}}</td>
-                    {% endwith %}
-                    <td>{{a.1|localtime|date:"Y-m-d H:i"}}</td>
-                </tr>
-                {%endfor %}
-                <tbody>
-            </table> 
+            <div id='hot-water-schedule-card'>
+
+            </div>
         </div>
     </div>
 </div>

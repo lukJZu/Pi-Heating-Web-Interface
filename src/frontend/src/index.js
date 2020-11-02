@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import { BoilerStateList } from './boilerStates'
+import { HotWaterScheduleCard } from './schedule'
 import { AgileRateCard, AgileRateList } from './agileRates'
 import { populateCurrentStates } from './currentStates';
 import { APILookup } from './lookup'
@@ -15,7 +16,7 @@ import "./darkly.min.css"
 
 const appEl = document.getElementById('root')
 if (appEl){
-  ReactDOM.render(<Consumption />, appEl);
+  ReactDOM.render(<HotWaterScheduleCard />, appEl);
 }
 
 const boilerStateRows = document.getElementById('boilerStateRows')
@@ -62,6 +63,10 @@ if (boostStatesCard){
     ReactDOM.render(<BoostStatesCard />, boostStatesCard);
 }
 
+const hotWaterScheduleCardEl = document.getElementById('hot-water-schedule-card')
+if (hotWaterScheduleCardEl){
+    ReactDOM.render(<HotWaterScheduleCard />, hotWaterScheduleCardEl);
+}
 // const chartEl = document.getElementById('consumption-page-chart')
 // if (chartEl){
 //     ReactDOM.render(<LeccyUseChart />, chartEl);

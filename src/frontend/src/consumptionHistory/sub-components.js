@@ -106,7 +106,8 @@ export class CustomDateRangePicker extends Component {
             </div>
             <div className="col-6 " align="left">
             <RangePicker 
-                size="large" 
+                size="large"
+                allowClear={false}
                 inputReadOnly={true}
                 value={this.state.dateRange}
                 onChange={this.datesChanged}
