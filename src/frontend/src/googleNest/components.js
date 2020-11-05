@@ -12,7 +12,9 @@ export function NestCard(props){
         const myCallback = (response, status) =>{
             if (status === 200) {
                 // console.log(response.traits["sdm.devices.traits.ThermostatTemperatureSetpoint"]["heatCelsius"])
-                setThermostatTemp(response.traits["sdm.devices.traits.ThermostatTemperatureSetpoint"]["heatCelsius"])
+                if ("heatCelsius" in response.traits["sdm.devices.traits.ThermostatTemperatureSetpoint"]){
+                    setThermostatTemp(response.traits["sdm.devices.traits.ThermostatTemperatureSetpoint"]["heatCelsius"])
+                }
                 setAmbientTemp(response.traits["sdm.devices.traits.Temperature"]["ambientTemperatureCelsius"])
             } else {
                 alert("There was an error")
@@ -27,7 +29,7 @@ export function NestCard(props){
     return ( typeof(ambientTemp) === 'number' ?
         <div>
             <h5>Ambient Temp:  {ambientTemp.toFixed(2)} </h5>
-            <h5>Thermostat Set Temp: {thermostatTemp.toFixed(2)}</h5>
+            <h5>Thermostat Set Temp: {typeof(thermostatTemp) === 'number' && thermostatTemp.toFixed(2)}</h5>
         </div>
         : 
         <div class="text-center">
