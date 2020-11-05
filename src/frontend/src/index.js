@@ -16,7 +16,7 @@ import "./darkly.min.css"
 
 const appEl = document.getElementById('root')
 if (appEl){
-  ReactDOM.render(<HotWaterScheduleCard />, appEl);
+  ReactDOM.render(<Consumption />, appEl);
 }
 
 const boilerStateRows = document.getElementById('boilerStateRows')

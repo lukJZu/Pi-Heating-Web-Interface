@@ -78,16 +78,19 @@ export default class Consumption extends Component{
             newDateRange = dateRange.map((date) => moment(date).subtract(1, addSubtractTime))
             //make sure new date range is not before date limit
             if (newDateRange[0].isBefore(this.state.datesLimit[0])){
-                var newMaxDate = moment.min(moment(this.state.datesLimit[0]).add({[addSubtractTime]:1}), this.state.datesLimit[1])
-                newDateRange = [this.state.datesLimit[0], newMaxDate]
+                newDateRange = dateRange
+                // var newMaxDate = moment.min(moment(this.state.datesLimit[0]).add({[addSubtractTime]:1}), this.state.datesLimit[1])
+                // newDateRange = [this.state.datesLimit[0], newMaxDate]
             }
         } else {
             newDateRange = dateRange.map((date) => moment(date).add(1, addSubtractTime))
             //make sure new date range is not after date limit
             if (newDateRange[1].isAfter(this.state.datesLimit[1])){
-                var newMinDate = moment.max(moment(this.state.datesLimit[1]).subtract({[addSubtractTime]:1}), this.state.datesLimit[0])
-                newDateRange = [newMinDate, this.state.datesLimit[1]]
+                newDateRange = dateRange
+                // var newMinDate = moment.max(moment(this.state.datesLimit[1]).subtract({[addSubtractTime]:1}), this.state.datesLimit[0])
+                // newDateRange = [newMinDate, this.state.datesLimit[1]]
             }
+            // console.log(newDateRange)
         }
         
         this.dateRangeElement.current.datesChanged(newDateRange)
