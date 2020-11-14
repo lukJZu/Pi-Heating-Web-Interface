@@ -15,7 +15,6 @@ def getJSONLeccyUse(request, *args, **kwargs):
     df = pd.read_pickle(consumptionDFPath)
     # converting nans to Nones
     df = df.where(pd.notnull(df), None)
-    # df = df.dropna()
 
     df = df.sort_values('interval_start', ascending=False)
     use_dict = df.to_dict(orient='records')

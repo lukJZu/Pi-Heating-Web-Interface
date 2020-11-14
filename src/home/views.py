@@ -1,9 +1,7 @@
 import os, csv, sys, re, glob, shutil
-# import iso8601
 from datetime import datetime
 from dateutil.tz import tzlocal
 
-# import django.http
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -14,8 +12,6 @@ from django.utils.decorators import method_decorator
 # from django.contrib.admin.views.decorators import staff_member_required
 
 from home.constants import homePath
-# import pandas as pd
-
 
 # @method_decorator(staff_member_required, name = 'get')
 class HomePage(View):
@@ -24,25 +20,13 @@ class HomePage(View):
         #checking for new states to be updated into the DB
         updateHistoryDB()
 
-        #getting the hot water schedule
-        # with open(os.path.join(homePath, 'data', 'hotWaterSchedule.csv'), 'r') as f:
-        #     lines = list(csv.reader(f))[1:]
-            # next(lines, None)
-            # schedule = condenseTimes(list(lines))
-        # print(lines)
         js_files = move_build_static()
         title = "Pi-Heating Dashboard"
         context = {"title":title,
-                    # "hotWaterSchedule": lines,
-                    # "boostRendered":boostRendered,
-                    # "agileRatesRendered": agileRatesRendered,
                     "js_files":js_files}
 
         return render(request, "homepage/homepage.html", context)
 
-    # def post(self, request):
-    #     self.boostView.post(request)
-    #     return redirect('/')
 
 def move_build_static():
     if not settings.DEBUG:

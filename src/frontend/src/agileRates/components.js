@@ -137,7 +137,7 @@ export function AgileRateCard(props){
                     { nextTwoRates[0] !== 9999 && <h5 className="lead">{nextTwoRates[0].toFixed(3)}p</h5>}
                     { nextTwoRates[1] !== 9999 && <h5 className="lead">{nextTwoRates[1].toFixed(3)}p</h5>}
                 </div>
-                {tmrsMinRate && <div className='col-6'>
+                {typeof(tmrsMinRate) === 'number' && <div className='col-6'>
                     <h4 className="display-6">Tomorrow's Lowest</h4>
                     <h5 className="lead">{tmrsMinRate.toFixed(3)}p</h5>
                     <span style={{fontSize:"95%"}}>at {tmrsMin.map((val) => {return moment(val).format("HH:mm")}).join()}</span>
