@@ -1,6 +1,5 @@
 import json, datetime
 import requests
-import google_auth_oauthlib as goauth
 
 from home.constants import homePath
 
@@ -12,20 +11,6 @@ def get_access_token():
     if expiry_time > datetime.datetime.now():
         return token_dict['access_token']
     
-
-    # flow = goauth.flow.InstalledAppFlow.from_client_secrets_file(
-    #         'oauth_secret_web.json',
-    #         scopes=['https://www.googleapis.com/auth/sdm.service'])
-    # # credentials = flow.refresh_token()
-    # credentials = flow.run_local_server(host='localhost',
-    #             port=8080, 
-    #             authorization_prompt_message='Please visit this URL: {url}', 
-    #             success_message='The auth flow is complete; you may close this window.',
-    #             open_browser=True)
-    # access_token = credentials.token
-    # refresh_token = credentials.refresh_token
-    # print(refresh_token)
-
     with open(f'{homePath}/data/oauth_secret_web.json', 'r') as f:
         credentials = json.load(f)['web']
         

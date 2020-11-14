@@ -88,13 +88,13 @@ export function BoostStatesCard(props){
     }
     const boostClicked = (event) => {
         //defocus the button
-        // event.target.blur()
+        event.target.blur()
         //get the button click and the boost type
         const boostType = event.target.title
         //turn the state to opposite
         const setValue = boostType === 'hotWater' ? 
                         !hotWaterBoostState.boost                
-                        : !heatingBoostState
+                        : !heatingBoostState.boost
 
         const postBoostData = { 'boost': boostType,
                                 "value": setValue,
