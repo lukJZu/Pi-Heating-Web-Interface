@@ -144,8 +144,8 @@ export function AgileRateCard(props){
                 </div>}
             </div>
         </div>) : (
-        <div className="row justify-content-center">
-            <div className="col-md-4 col-sm-12 mb-3">
+        <div className="row justify-content-center mb-3">
+            <div className="col">
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-title mb-3">Current Rate</h5>
@@ -154,24 +154,26 @@ export function AgileRateCard(props){
                     </div>
                 </div>
             </div>
-            <div className="col-md-4 col-sm-12 mb-3">
+            <div className="col">
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-titl mb-3">Today's Lowest</h5>
-                        <h3 className="font-weight-bold mb-3">{todaysMinRate ? todaysMinRate.toFixed(3) : ''}p</h3>
+                        <h3 className="font-weight-bold mb-3">{typeof(todaysMinRate) === 'number' ? todaysMinRate.toFixed(3) : ''}p</h3>
                         <h5>at {todaysMin.map((val) => {return moment(val).format("HH:mm")}).join()}</h5>
                     </div>
                 </div>
             </div>
-            <div className="col-md-4 col-sm-12 mb-3">
+            { typeof(tmrsMinRate) === 'number' &&
+            <div className="col">
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-title mb-3">Tomorrow's Lowest</h5>
-                        <h3 className="font-weight-bold mb-3">{tmrsMinRate ? tmrsMinRate.toFixed(3) : ''}{tmrsMinRate && `p`}</h3>
-                        {tmrsMinRate && <h5>at {tmrsMin.map((val) => {return moment(val).format("HH:mm")}).join()}</h5>}
+                        <h3 className="font-weight-bold mb-3">{typeof(tmrsMinRate) === 'number' ? tmrsMinRate.toFixed(3) : ''}
+                            {typeof(tmrsMinRate) === 'number' && `p`}</h3>
+                        {typeof(tmrsMinRate) === 'number' && <h5>at {tmrsMin.map((val) => {return moment(val).format("HH:mm")}).join()}</h5>}
                     </div>
                 </div>
-            </div>
+            </div>}
         </div>)
         )
         

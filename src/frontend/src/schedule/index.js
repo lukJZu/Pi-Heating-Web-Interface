@@ -1,5 +1,5 @@
-import { HotWaterScheduleCard } from './components'
+import { ScheduleCard } from './components'
 
 export {
-    HotWaterScheduleCard
+    ScheduleCard
 }

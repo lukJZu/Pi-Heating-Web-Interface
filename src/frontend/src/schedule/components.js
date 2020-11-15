@@ -7,7 +7,7 @@ import {hideSpinner} from '../common'
 import { APILookup } from '../lookup'
 
 
-export function HotWaterScheduleCard(props){
+export function ScheduleCard(props){
     const [schedule, setSchedule] = useState([])
 
 
@@ -18,8 +18,6 @@ export function HotWaterScheduleCard(props){
             alert("There was an error")
         }
       
-        //hide the spinner
-        hideSpinner('boost-states-card-spinner')
     }
 
 
@@ -33,7 +31,8 @@ export function HotWaterScheduleCard(props){
             <tr>
                 <th>Start Time</th>
                 <th>End Time</th>
-                {/* <th>Hot Water</th> */}
+                <th>Hot Water</th>
+                <th>Heating</th>
             </tr>
             </thead>
             <tbody>
@@ -56,7 +55,8 @@ function ScheduleRow(props){
             :""}>
             <td>{startTime.format("DD MMM HH:mm")}</td>
             <td>{endTime.format("DD MMM HH:mm")}</td>
-            {/* <td>{schedule.hot_water_state?"ON":"OFF"}</td> */}
+            <td>{schedule.hot_water_state?"ON":"OFF"}</td>
+            <td>{schedule.heating_state?"ON":"OFF"}</td>
         </tr>
         
     )

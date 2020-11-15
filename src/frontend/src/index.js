@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import { BoilerStateList } from './boilerStates'
-import { HotWaterScheduleCard } from './schedule'
+import { ScheduleCard } from './schedule'
 import { AgileRateCard, AgileRateList } from './agileRates'
 import { populateCurrentStates } from './currentStates';
 import { APILookup } from './lookup'
@@ -63,9 +63,9 @@ if (boostStatesCard){
     ReactDOM.render(<BoostStatesCard />, boostStatesCard);
 }
 
-const hotWaterScheduleCardEl = document.getElementById('hot-water-schedule-card')
-if (hotWaterScheduleCardEl){
-    ReactDOM.render(<HotWaterScheduleCard />, hotWaterScheduleCardEl);
+const scheduleCardEl = document.getElementById('hot-water-schedule-card')
+if (scheduleCardEl){
+    ReactDOM.render(<ScheduleCard />, scheduleCardEl);
 }
 // const chartEl = document.getElementById('consumption-page-chart')
 // if (chartEl){
