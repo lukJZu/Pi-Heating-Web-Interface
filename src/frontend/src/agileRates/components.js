@@ -125,7 +125,7 @@ export function AgileRateCard(props){
                 </div>
                 <div className='col-6'>
                     <h4 className="display-6">Today's Lowest</h4>
-                    <h5 className="lead">{todaysMinRate ? todaysMinRate.toFixed(3): ''}p</h5>
+                    <h5 className="lead">{typeof(todaysMinRate) === 'number' ? todaysMinRate.toFixed(3): ''}p</h5>
                     <span style={{fontSize:"95%"}}>
                         at {todaysMin.map((val) => {return moment(val).format("HH:mm")}).join()}</span>
                 </div>

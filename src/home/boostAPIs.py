@@ -14,17 +14,6 @@ def checkState():
 
     return states
 
-# def stop_boost(request):
-#     states = checkState()
-
-#     states['hotWater']['boost'] = False
-#     states['hotWater']['endTime'] = (datetime.datetime.now().astimezone()).isoformat()
-
-#     with open(stateJsonPath, 'w') as f:
-#         json.dump(states, f)
-
-#     return redirect('/')
-
 
 @api_view(['GET'])
 def get_boost_states(request, *args, **kwargs):
