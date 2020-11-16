@@ -29,8 +29,9 @@ def set_boost_states(request, *args, **kwargs):
     
     boostStates[data['boost']]['boost'] = data['value']
     if data['value']:
+        print(data['duration'])
         boostStates[data['boost']]['endTime'] = (datetime.datetime.now().astimezone() + 
-                datetime.timedelta(seconds = data['duration'] * 60)).isoformat()
+                datetime.timedelta(seconds = int(data['duration']) * 60)).isoformat()
 
     #store the states back to file
     with open(stateJsonPath, 'w') as f:
