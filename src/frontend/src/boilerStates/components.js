@@ -9,8 +9,8 @@ export function BoilerStateRow(props){
     const endTime = moment(boilerState.end_time)
 
     return <tr>
-              <td>{startTime.format("DD MMM HH:mm")}</td>
-              <td>{endTime.format("DD MMM HH:mm")}</td>
+              <td>{startTime.format("ddd DD MMM HH:mm")}</td>
+              <td>{endTime.format("ddd DD MMM HH:mm")}</td>
               <td>{endTime.diff(startTime, 'm')}</td>
               <td>{boilerState.hot_water_state ? "ON":"OFF"}</td>
               <td>{boilerState.heating_state ? "ON":"OFF"}</td>

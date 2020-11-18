@@ -17,7 +17,7 @@ export function NestCard(props){
                 }
                 setAmbientTemp(response.traits["sdm.devices.traits.Temperature"]["ambientTemperatureCelsius"])
             } else {
-                alert("There was an error")
+                alert("Error in retrieving Nest Data")
             }
           
             //hide the spinner

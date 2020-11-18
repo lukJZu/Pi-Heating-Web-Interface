@@ -122,7 +122,7 @@ export class CustomDateRangePicker extends Component {
 
 export function LeccyUseChart(prop){
     
-    const {data, barPlotOptions, chartView } = prop
+    const {data, barPlotOptions } = prop
     
     const chart = ( data ?
     <ResponsiveContainer width="100%" height={500}>

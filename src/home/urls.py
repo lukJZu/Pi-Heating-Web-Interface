@@ -21,7 +21,7 @@ from django.views.generic import TemplateView
 
 from home.views import HomePage
 from home.currentStates import getJSONCurrentStates, setCurrentState
-from home.schedule import getSchedule
+from home.schedule import getSchedule, setSchedule
 from home.boostAPIs import get_boost_states, set_boost_states
 from boilerHistory.views import HistoryPage, BoilerStateListCreate
 from agileRates.views import agile_rates_view_page, getJSONAgileRates
@@ -46,6 +46,7 @@ urlpatterns += [
     path('api/currentStates/', getJSONCurrentStates),
     path('api/currentStates/change', setCurrentState),
     path('api/schedule/', getSchedule),
+    path('api/schedule/set', setSchedule),
     path('api/agileRates/', getJSONAgileRates),
     path('api/googleNest/', GoogleNestPage.as_view()),
     path('api/boost/', get_boost_states),
