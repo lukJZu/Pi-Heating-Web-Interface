@@ -51,7 +51,7 @@ function CategoryStatesBlock(props){
 
     return (
         <div>
-            <button className={`btn btn-block btn-${colour}`} style={{maxWidth:130, whiteSpace: "pre-wrap"}}
+            <button className={`btn btn-block btn-${colour}`} style={{maxWidth:160, whiteSpace: "pre-wrap"}}
                     onClick={buttonOnClickEvent}> 
                 <h4 class="font-weight-bold alert-heading text-center pt-1">{catText}</h4>
                 <hr className={`alert-${colour}`} />
