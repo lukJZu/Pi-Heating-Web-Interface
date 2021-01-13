@@ -33,31 +33,75 @@ def move_build_static():
         return None
 
     build_js_path = os.path.join(settings.BASE_DIR, 'frontend/build/static/js')
+    build_css_path = os.path.join(settings.BASE_DIR, 'frontend/build/static/css')
     try:
         build_js_dir = os.listdir(build_js_path)
+        build_css_dir = os.listdir(build_css_path)
     except FileNotFoundError:
         build_js_dir = []
+        build_css_dir = []
 
     r1 = re.compile('^main.*js$')
     r2 = re.compile('^2.*chunk.{1}js$')
-    static_js_path = os.path.join(settings.STATICFILES_DIRS[0], 'js')
+    css_filter = re.compile('^main.*css$')
+    static_js_path = os.path.join(settings.STATICFILES_DIRS[0], 'react/js')
+    static_css_path = os.path.join(settings.STATICFILES_DIRS[0], 'react/css')
     static_js_dir = os.listdir(static_js_path)
+    static_css_dir = os.listdir(static_css_path)
 
     if build_js_dir:
-        #clear the static js folder
+        #clear the static js and css folder
         for file_name in static_js_dir:
             os.remove(os.path.join(static_js_path, file_name))
-        #move all files from build to static js folder
+
+        for file_name in static_css_dir:
+            os.remove(os.path.join(static_css_path, file_name))
+
+        #move all files from build to static js+css folder
         for file_name in build_js_dir:
             shutil.move(os.path.join(build_js_path, file_name), 
                         os.path.join(static_js_path, file_name))
+        for file_name in build_css_dir:
+            shutil.move(os.path.join(build_css_path, file_name), 
+                        os.path.join(static_css_path, file_name))
         
     #re-fetch new file names
     static_js_dir = os.listdir(static_js_path)
     static_main_file = list(filter(r1.match, static_js_dir))[0]
     static_sub_file = list(filter(r2.match, static_js_dir))[0]
+    static_css_file = list(filter(css_filter.match, static_css_dir))[0]
+    # raise EnvironmentError
+    return (static_main_file, static_sub_file, static_css_file)
+
+    # if not settings.DEBUG:
+    #     return None
+
+    # build_js_path = os.path.join(settings.BASE_DIR, 'frontend/build/static/js')
+    # try:
+    #     build_js_dir = os.listdir(build_js_path)
+    # except FileNotFoundError:
+    #     build_js_dir = []
+
+    # r1 = re.compile('^main.*js$')
+    # r2 = re.compile('^2.*chunk.{1}js$')
+    # static_js_path = os.path.join(settings.STATICFILES_DIRS[0], 'js')
+    # static_js_dir = os.listdir(static_js_path)
+
+    # if build_js_dir:
+    #     #clear the static js folder
+    #     for file_name in static_js_dir:
+    #         os.remove(os.path.join(static_js_path, file_name))
+    #     #move all files from build to static js folder
+    #     for file_name in build_js_dir:
+    #         shutil.move(os.path.join(build_js_path, file_name), 
+    #                     os.path.join(static_js_path, file_name))
+        
+    # #re-fetch new file names
+    # static_js_dir = os.listdir(static_js_path)
+    # static_main_file = list(filter(r1.match, static_js_dir))[0]
+    # static_sub_file = list(filter(r2.match, static_js_dir))[0]
     
-    return (static_main_file, static_sub_file)
+    # return (static_main_file, static_sub_file)
 
 
 

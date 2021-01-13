@@ -1,5 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import {hideSpinner} from '../common'
+import { ResponsiveContainer, Bar, Cell,
+        CartesianGrid, XAxis, YAxis, ComposedChart, 
+        Tooltip, ReferenceLine } from 'recharts';
 import moment from 'moment';
 
 import {APILookup} from '../lookup'
@@ -115,8 +118,13 @@ export function AgileRateCard(props){
         }
         
         return ( type === 'homepage' ?
+        
         (<div>
-            <div className="row">
+            <div className="row ml-n4">
+                <AgileRateChart data={agileRatesInit} minRates={[todaysMinRate, tmrsMinRate]}/>
+            </div>
+            <hr className="alert-dark ml-3 my-2"></hr>
+            <div className="ml-3 row">
                 <div className='col-6'>
                     <h4 className="display-6">Current</h4>
                     <h5 className="lead">{currentRate.toFixed(3)}p</h5>
@@ -124,26 +132,13 @@ export function AgileRateCard(props){
                         since {currentValidFrom.format("HH:mm")}</span>
                 </div>
                 <div className='col-6'>
-                    <h4 className="display-6">Today's Lowest</h4>
-                    <h5 className="lead">{typeof(todaysMinRate) === 'number' ? todaysMinRate.toFixed(3): ''}p</h5>
-                    <span style={{fontSize:"95%"}}>
-                        at {todaysMin.map((val) => {return moment(val).format("HH:mm")}).join()}</span>
-                </div>
-            </div>
-            <hr className="alert-dark my-4"></hr>
-            <div className="row">
-                <div className='col-6'>
                     <h4 className="display-6">Next Two</h4>
                     { nextTwoRates[0] !== 9999 && <h5 className="lead">{nextTwoRates[0].toFixed(3)}p</h5>}
                     { nextTwoRates[1] !== 9999 && <h5 className="lead">{nextTwoRates[1].toFixed(3)}p</h5>}
                 </div>
-                {typeof(tmrsMinRate) === 'number' && <div className='col-6'>
-                    <h4 className="display-6">Tomorrow's Lowest</h4>
-                    <h5 className="lead">{tmrsMinRate.toFixed(3)}p</h5>
-                    <span style={{fontSize:"95%"}}>at {tmrsMin.map((val) => {return moment(val).format("HH:mm")}).join()}</span>
-                </div>}
             </div>
-        </div>) : (
+        </div>
+        ) : (
         <div className="row justify-content-center mb-3">
             <div className="col">
                 <div className="card">
@@ -196,4 +191,74 @@ export function AgileRateCard(props){
     }, [])
 
     return populateCard(type)
+}
+
+function AgileRateChart(props){
+    
+    const { data, minRates } = props
+    
+    for (var ptObj of data){
+        const startTime = moment(ptObj.valid_from)
+        const endTime = moment(ptObj.valid_to)
+        if (moment().isBetween(startTime, endTime)) {
+            ptObj.color = "#ffffff"
+        } else if (ptObj.rate > 34.9) {
+            ptObj.color = "#ff0000"
+        } else if ( minRates.includes(ptObj.rate)) {
+            ptObj.color = "#00ff00"
+        } else {
+            ptObj.color = "#795ae090"
+        }
+    }
+
+    const chart = ( data ?
+    <ResponsiveContainer width="100%" height={200}>
+        <ComposedChart data={data}>
+            <CartesianGrid stroke="#aaaaaaaa"/>
+            <XAxis dataKey="valid_from" tickFormatter={ (tickObj) => {return moment(tickObj).format("HH:mm")}}/>
+            <YAxis yAxisId="rate" orientation="left" type="number" 
+                    name="Rate" unit="p" />
+            <ReferenceLine y={35} yAxisId="rate" stroke="#ff0000" strokeWidth={1.25}/>
+            <Bar yAxisId="rate" fill="#000000" name="Rate"
+                    dataKey="rate" stroke="#8884d8">
+                {
+                data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} stroke={entry.color} />
+                ))
+                }
+            </Bar>
+            <ReferenceLine y={14.6} yAxisId="rate" stroke="#795ae09" strokeWidth={1}/>
+            <Tooltip content={<CustomTooltip />}/>
+        </ComposedChart >
+    </ResponsiveContainer>
+    : "");
+    
+    return chart
+}
+
+
+function CustomTooltip ({ active, payload, label }) {
+    if (active && label && payload) {
+        //checking whether each of the info is found
+        // const avgCostValueObj = payload.find(e => e.dataKey ==='avgCost')
+        // const mainValueObj = payload.find(e => (e.dataKey !== 'avgCost') && (e.dataKey !== 'rate'))
+        const rateValueObj = payload.find(e => e.dataKey ==='rate')
+        
+        return (
+        <div className="custom-tooltip">
+            <p className="tooltip-x-value" style={{fontSize:"90%"}}>{`${moment(label).format("HH:mm")}`} </p>
+            {/* { mainValueObj  && 
+                <div className="tooltip-value-y">
+                    <p>{`${chartPlotOptions[mainValueObj.dataKey].label}: `} 
+                        {mainValueObj.value.toFixed(3)}{chartPlotOptions[mainValueObj.dataKey].unit}</p></div>}
+            { avgCostValueObj &&
+                <div className="tooltip-value-avgCost">
+                    <p>{`${chartPlotOptions['avgCost'].label}: `}
+                        {avgCostValueObj.value.toFixed(3)}{chartPlotOptions['avgCost'].unit}</p></div>} */}
+            { rateValueObj &&
+                <div className="tooltip-value-avgCost" style={{color:"#bbbbbb"}}>
+                    <p>{rateValueObj.value.toFixed(3)}p</p></div>}
+        </div>
+        );
+    } else {return ""}
 }

@@ -1,11 +1,13 @@
 {% load tz %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/chart-tooltip.css' %}">
 <div class="col-md-6 col-sm-12 col-xl-4 mb-3" >
     <div class="card">
         <div class="card-body">
             <h4 class="card-title mb-3">
                 Agile Rates
             </h4>
-            <div class="content" id="agile-rates-card">
+            <div class="content ml-n2 mr-2" id="agile-rates-card">
                 <div class="row">
                     <div class='col-6'>
                         <h4>Current</h4>
