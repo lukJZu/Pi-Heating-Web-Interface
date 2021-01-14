@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {hideSpinner} from '../common'
 import { ResponsiveContainer, Bar, Cell,
         CartesianGrid, XAxis, YAxis, ComposedChart, 
-        Tooltip, ReferenceLine } from 'recharts';
+        Tooltip, ReferenceLine, LabelList } from 'recharts';
 import moment from 'moment';
 
 import {APILookup} from '../lookup'
@@ -91,7 +91,7 @@ export function AgileRateCard(props){
         var tmrsMinRateTime = moment(tmrsMin[0])
 
         var timeNow = moment()
-        var currentRate = 9999, nextTwoRates = [9999, 9999]
+        var currentRate = 9999, nextRates = [9999, 9999, 9999, 9999]
         for (var i = 0; i < agileRatesInit.length; i++){
             var startTime = moment(agileRatesInit[i].valid_from)
             var endTime = moment(agileRatesInit[i].valid_to)
@@ -101,10 +101,16 @@ export function AgileRateCard(props){
                 var currentValidFrom = moment(agileRatesInit[i].valid_from)
                 //storing the next two rates
                 if (i < agileRatesInit.length - 1){
-                    nextTwoRates[0] = agileRatesInit[i+1].rate
+                    nextRates[0] = agileRatesInit[i+1].rate
                 }
                 if (i < agileRatesInit.length - 2){
-                    nextTwoRates[1] = agileRatesInit[i+2].rate
+                    nextRates[1] = agileRatesInit[i+2].rate
+                }
+                if (i < agileRatesInit.length - 3){
+                    nextRates[2] = agileRatesInit[i+3].rate
+                }
+                if (i < agileRatesInit.length - 3){
+                    nextRates[3] = agileRatesInit[i+3].rate
                 }
             }
 
@@ -120,21 +126,24 @@ export function AgileRateCard(props){
         return ( type === 'homepage' ?
         
         (<div>
-            <div className="row ml-n4">
+            <div className="row">
                 <AgileRateChart data={agileRatesInit} minRates={[todaysMinRate, tmrsMinRate]}/>
             </div>
-            <hr className="alert-dark ml-3 my-2"></hr>
-            <div className="ml-3 row">
-                <div className='col-6'>
-                    <h4 className="display-6">Current</h4>
-                    <h5 className="lead">{currentRate.toFixed(3)}p</h5>
+            <hr className="alert-dark my-3"></hr>
+            <div className="ml-1 mt-3 row">
+                {/* <div className='col-6'>
+                    <h4 className="display-6">Min Today</h4>
+                    <h5 className="lead">{typeof(todaysMinRate) === 'number' ? todaysMinRate.toFixed(3) : ''}p</h5>
                     <span style={{fontSize:"95%"}}>
-                        since {currentValidFrom.format("HH:mm")}</span>
+                        at {todaysMin.map((val) => {return moment(val).format("HH:mm")}).join()}</span>
+                </div> */}
+                <div className='col-3'>
+                    <h5>Next Rates</h5>
                 </div>
-                <div className='col-6'>
-                    <h4 className="display-6">Next Two</h4>
-                    { nextTwoRates[0] !== 9999 && <h5 className="lead">{nextTwoRates[0].toFixed(3)}p</h5>}
-                    { nextTwoRates[1] !== 9999 && <h5 className="lead">{nextTwoRates[1].toFixed(3)}p</h5>}
+                <div>
+                    <h6 className="align-bottom">
+                        {nextRates.map( (val) => {return `${val.toFixed(3)}p` + "\u2003\u2003"})}
+                    </h6>
                 </div>
             </div>
         </div>
@@ -197,28 +206,62 @@ function AgileRateChart(props){
     
     const { data, minRates } = props
     
-    for (var ptObj of data){
+    //find the index of the data of current time
+    var currentTimeIdx 
+
+    // for (var ptObj of data){
+    data.forEach( (ptObj, i) => {
         const startTime = moment(ptObj.valid_from)
         const endTime = moment(ptObj.valid_to)
         if (moment().isBetween(startTime, endTime)) {
             ptObj.color = "#ffffff"
+            currentTimeIdx = i
         } else if (ptObj.rate > 34.9) {
             ptObj.color = "#ff0000"
+        } else if (ptObj.rate > 30) {
+            ptObj.color = "#ff7b00"
+        } else if (ptObj.rate > 20) {
+            ptObj.color = "#e09d00"
+        } else if (ptObj.rate > 15) {
+            ptObj.color = "#edea26"
         } else if ( minRates.includes(ptObj.rate)) {
             ptObj.color = "#00ff00"
         } else {
             ptObj.color = "#795ae090"
         }
+    })
+
+    const customLabel = (props) => {
+        // console.log(props)
+        const {
+            x, y, width, height, value,
+        } = props;
+        const radius = 7;
+
+        return (props.index === currentTimeIdx ?
+            <g>
+                <text x={x + width / 2} y={y - radius} fill="#fff" textAnchor="middle" dominantBaseline="middle"
+                        fontSize="small">
+                    {props.value.toFixed(2)}
+                </text>
+            </g>
+            : ""
+        )
+
     }
 
     const chart = ( data ?
-    <ResponsiveContainer width="100%" height={200}>
-        <ComposedChart data={data}>
+    <ResponsiveContainer width="100%" height={250} >
+        <ComposedChart data={data} margin={{ left: -15, right: 15, top:18 }}>
             <CartesianGrid stroke="#aaaaaaaa"/>
-            <XAxis dataKey="valid_from" tickFormatter={ (tickObj) => {return moment(tickObj).format("HH:mm")}}/>
-            <YAxis yAxisId="rate" orientation="left" type="number" 
-                    name="Rate" unit="p" />
-            <ReferenceLine y={35} yAxisId="rate" stroke="#ff0000" strokeWidth={1.25}/>
+            <XAxis dataKey="valid_from" tick={{fontSize:"small"}}
+                    tickFormatter={ (tickObj) => {return moment(tickObj).format("HH:mm")}}/>
+            <YAxis yAxisId="rate" orientation="left" type="number" tick={{fontSize:"small"}}
+                    name="Rate" unit="p" //domain={[0, 35]} 
+                    ticks={[0,5,10,15,20,25,30,35]}
+                    interval="preserveStartEnd"/>
+            <ReferenceLine y={35} yAxisId="rate" stroke="#f00" strokeWidth={1.25}/>
+            <ReferenceLine y={0} yAxisId="rate" stroke="#8884d8" strokeWidth={1.25}/>
             <Bar yAxisId="rate" fill="#000000" name="Rate"
                     dataKey="rate" stroke="#8884d8">
                 {
@@ -226,6 +269,7 @@ function AgileRateChart(props){
                     <Cell key={`cell-${index}`} stroke={entry.color} />
                 ))
                 }
+                <LabelList dataKey="rate" position="top" content={customLabel}/>
             </Bar>
             <ReferenceLine y={14.6} yAxisId="rate" stroke="#795ae09" strokeWidth={1}/>
             <Tooltip content={<CustomTooltip />}/>
