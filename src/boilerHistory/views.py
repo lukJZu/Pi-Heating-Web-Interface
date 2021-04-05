@@ -17,7 +17,7 @@ from .models import BoilerState
 from home.views import condenseTimes, move_build_static
 
 class BoilerStateListCreate(generics.ListCreateAPIView):
-    queryset = BoilerState.objects.all().order_by("-start_time")
+    queryset = BoilerState.objects.filter(start_time__gt=datetime.now()-timedelta(days=90)).order_by("-start_time")
     serializer_class = BoilerStateSerializer
     
     def list(self, request, *args, **kwargs):
@@ -37,7 +37,7 @@ class HistoryPage(View):
 
         context = {}
         #getting all history object
-        allStates = BoilerState.objects.all()
+        allStates = BoilerState.objects.filter(start_time__gt=datetime.now()-timedelta(days=90))
         if not allStates.exists():
             context['week'] = -1
             context['month'] = -1
