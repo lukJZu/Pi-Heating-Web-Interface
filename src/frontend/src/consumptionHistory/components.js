@@ -79,18 +79,13 @@ export default class Consumption extends Component{
             //make sure new date range is not before date limit
             if (newDateRange[0].isBefore(this.state.datesLimit[0])){
                 newDateRange = dateRange
-                // var newMaxDate = moment.min(moment(this.state.datesLimit[0]).add({[addSubtractTime]:1}), this.state.datesLimit[1])
-                // newDateRange = [this.state.datesLimit[0], newMaxDate]
             }
         } else {
             newDateRange = dateRange.map((date) => moment(date).add(1, addSubtractTime))
             //make sure new date range is not after date limit
             if (newDateRange[1].isAfter(this.state.datesLimit[1])){
                 newDateRange = dateRange
-                // var newMinDate = moment.max(moment(this.state.datesLimit[1]).subtract({[addSubtractTime]:1}), this.state.datesLimit[0])
-                // newDateRange = [newMinDate, this.state.datesLimit[1]]
             }
-            // console.log(newDateRange)
         }
         
         this.dateRangeElement.current.datesChanged(newDateRange)
@@ -280,7 +275,7 @@ export default class Consumption extends Component{
                 //calculating the max and min date
                 var dates = leccyUse.map((val) => {return val.time})
                 this.setState({datesLimit: [moment.min(dates).set({'hour':0, 'minute':0, 'second':0, 'millisecond':0}).subtract(1, 'd'), 
-                                            moment.max(dates).set({'hour':0, 'minute':0, 'second':0, 'millisecond':0}).add(1, 'd')]})
+                                            moment.max(dates).set({'hour':0, 'minute':0, 'second':0, 'millisecond':0})]})
           } else {
               alert("There was an error")
           }
