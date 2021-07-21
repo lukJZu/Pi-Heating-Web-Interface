@@ -141,7 +141,7 @@ def updateHistoryDB():
         for no in range(len(lines)-1, -1, -1):
             if not len(lines[no]):
                 continue
-            elif lines[no][-1] == 'True':
+            elif no == len(lines)-1 or lines[no][-1] == 'True':
                 value = lines[no][0] + ","
                 value += ",".join(str(v) for v in lines[no][1:])
                 value += "\n"
